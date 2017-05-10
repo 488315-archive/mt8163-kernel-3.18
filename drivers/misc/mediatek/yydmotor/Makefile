@@ -1,0 +1,6 @@
+
+
+
+obj-y += yydmotor.o
+
+

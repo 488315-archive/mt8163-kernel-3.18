@@ -1,0 +1,9 @@
+
+config MTK_MIR3DA
+	bool "MTK_MIR3DA for MediaTek package"
+	default n
+	help
+	  It support different accelerometer sensor.
+          If this option is set,
+	  it will support
+          MTK_MIR3DA Accelerometer.
