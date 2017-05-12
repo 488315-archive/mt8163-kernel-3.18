@@ -1468,6 +1468,7 @@ static void spk_ic_mode(int mode)
 static void Ext_Speaker_Amp_Change(bool enable)
 {
 #define SPK_WARM_UP_TIME        (25)	/* unit is ms */
+static bool first_boot=true;
 
 #if defined(CONFIG_MTK_LEGACY)
 	int ret;
@@ -1514,6 +1515,16 @@ static void Ext_Speaker_Amp_Change(bool enable)
 #endif
 	} else {
 		PRINTK_AUDDRV("Ext_Speaker_Amp_Change OFF+\n");
+//---------by lifei--------
+/*
+	为了解决烧程序第一次开机POPO声；
+*/
+		if(first_boot)
+		{
+			first_boot=false;
+			msleep(4000);
+		}
+//--------end-----------
 		spk_ctl_code63xx(0);
 		//udelay(500);
 #ifndef CONFIG_MTK_SPEAKER
