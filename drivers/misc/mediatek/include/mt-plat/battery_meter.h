@@ -326,8 +326,8 @@ extern bool bat_spm_timeout;
 extern unsigned int sleep_total_time;
 #endif
 
-extern int cw2015_get_voltage(void);
-extern int cw2015_get_capacity(void);
+//extern int cw2015_get_voltage(void);
+//extern int cw2015_get_capacity(void);
 
 extern char *saved_command_line;
 extern BATTERY_VOLTAGE_ENUM cv_voltage;

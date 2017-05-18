@@ -549,6 +549,10 @@ static int usb_get_property(struct power_supply *psy,
 	}
 	return ret;
 }
+//extern int cw2015_get_capacity(void);
+//extern int cw2015_get_voltage(void);
+extern int g_cw2015_capacity ;
+extern int g_cw2015_vol ;
 
 static int battery_get_property(struct power_supply *psy,
 				enum power_supply_property psp, union power_supply_propval *val)
@@ -570,10 +574,12 @@ static int battery_get_property(struct power_supply *psy,
 		val->intval = data->BAT_TECHNOLOGY;
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
-		val->intval = data->BAT_CAPACITY;
+		//val->intval = data->BAT_CAPACITY;
+		val->intval =g_cw2015_capacity;//cw2015_get_capacity();
 		break;
 	case POWER_SUPPLY_PROP_batt_vol:
-		val->intval = data->BAT_batt_vol;
+		//val->intval = data->BAT_batt_vol;
+		val->intval =g_cw2015_vol;// cw2015_get_voltage();
 		break;
 	case POWER_SUPPLY_PROP_batt_temp:
 		val->intval = data->BAT_batt_temp;

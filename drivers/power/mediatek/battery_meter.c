@@ -3240,7 +3240,7 @@ signed int get_dynamic_period(int first_use, int first_wakeup_time, int battery_
 /* ============================================================ // */
 signed int battery_meter_get_battery_voltage(kal_bool update)
 {
-#if 0
+#if 1
 	int ret = 0;
 	int val = 5;
 	static int pre_val = -1;
@@ -3537,7 +3537,7 @@ signed int battery_meter_get_battery_percentage(void)
 		fg_qmax_update_for_aging_flag = 1;
 
 //////add lifei/////////
-#if 1
+#if 0
 return cw2015_get_capacity();
 #endif
 ////////end/////////////

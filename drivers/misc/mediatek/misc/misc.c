@@ -27,8 +27,9 @@ extern  void aw2013_breath_all(int led0,int led1,int led2);
 int danceflag=false;
 //static struct wake_lock m_lock;
 bool current_mode_is_fatory=false;
-extern int cw2015_read_version(void);
-extern int cw2015_read_all_reg(char *buf);
+
+//extern int cw2015_read_version(void);
+//extern int cw2015_read_all_reg(char *buf);
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_EARLYSUSPEND
@@ -56,20 +57,23 @@ extern int cw2015_read_all_reg(char *buf);
 
  static ssize_t yyd_misc_store(struct device *dev, struct device_attribute *attr,const char *buf, size_t count)
  {
- 	char pbuf[11];
+#if 0
+	char pbuf[11];
 	if(buf == NULL)return 0;
 
 	if(buf[0] == 'A')
 	{
 		cw2015_read_all_reg(pbuf);
 	}
+#endif	
 	return 1;
 }
  static ssize_t yyd_misc_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
+#if 0
 	int ret;	
 	char data[2] = {0};
-	ret=cw2015_read_version();
+	//ret=cw2015_read_version();
 	if(ret==0x6f)
 	data[0]='1';
 	else 
@@ -77,7 +81,9 @@ extern int cw2015_read_all_reg(char *buf);
 	
 	data[1]='\0';
 	return sprintf(buf, "%s\n", data);	
-	
+#endif	
+return 0;
+
 }
  static DEVICE_ATTR(yyd_misc, S_IWUSR | S_IWGRP | S_IRUGO, yyd_misc_show, yyd_misc_store);
 
@@ -108,17 +114,17 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 		if(pbuf[1] == '0'){current_mode_is_fatory=false;}
 		else if(pbuf[1] == '1'){current_mode_is_fatory=true;}			
 	  }
-		
+	 	
 	return len;
 }
 
 static ssize_t misc_read(struct file *pfile, char __user *to, size_t len, loff_t *offset)
 {
-	char buf,ret;
-	printk("misc_read !\n");
+	//char buf,ret;
+	//printk("misc_read !\n");
 	
-	buf= cw2015_read_version();
-	ret=copy_to_user(to, &buf,  1);
+	//buf= cw2015_read_version();
+	//ret=copy_to_user(to, &buf,  1);
 	return 0;
 }
 
