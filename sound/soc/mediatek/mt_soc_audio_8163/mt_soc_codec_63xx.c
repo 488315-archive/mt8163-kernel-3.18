@@ -638,6 +638,7 @@ extern void commit_status(char *switch_name);
 
 static int mt63xx_codec_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *Daiport)
 {
+	int time_out=0;
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
 		printk("mt63xx_codec_prepare +++ SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
 			 substream->runtime->rate);
@@ -650,7 +651,9 @@ static int mt63xx_codec_prepare(struct snd_pcm_substream *substream, struct snd_
 			while(1)
 			{
 			mdelay(1);
-			if(yyd_main_server == true)break;	
+			if(yyd_main_server == true)break;
+			time_out++;
+			if(time_out >1500)break;
 			}
 	    	}
 		printk("mt63xx_codec_prepare---- SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
