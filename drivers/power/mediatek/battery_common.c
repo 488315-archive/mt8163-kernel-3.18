@@ -576,6 +576,7 @@ static int battery_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CAPACITY:
 		//val->intval = data->BAT_CAPACITY;
 		val->intval =g_cw2015_capacity;//cw2015_get_capacity();
+		if(val->intval ==0) val->intval =1;
 		break;
 	case POWER_SUPPLY_PROP_batt_vol:
 		//val->intval = data->BAT_batt_vol;

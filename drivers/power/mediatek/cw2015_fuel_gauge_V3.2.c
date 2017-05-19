@@ -85,6 +85,7 @@ static unsigned char config_info[SIZE_BATINFO] = {
 
 static struct power_supply *chrg_usb_psy;
 static struct power_supply *chrg_ac_psy;
+static struct i2c_client *cw_client;
 
 #ifdef CONFIG_PM
 static struct timespec suspend_time_before;
@@ -138,6 +139,19 @@ int cw_read_word(struct i2c_client *client, unsigned char reg, unsigned char buf
 	ret = i2c_smbus_read_i2c_block_data( client, reg, 2, buf );
 	cw_printk("%2x = %2x %2x\n", reg, buf[0], buf[1]);
 	return ret;
+}
+
+int cw2015_read_version(void)
+{
+	int i=0,ret;
+         u8 reg_val;
+	while(i++ <4)
+	{
+		ret=cw_read(cw_client, 0, &reg_val);
+		if(ret >0)break;//return reg_val;
+	}
+	//printk("ppppppppp--%d\n",reg_val);
+	return reg_val;
 }
 
 /*CW2015 update profile function, Often called during initialization*/
@@ -756,7 +770,7 @@ static int cw2015_probe(struct i2c_client *client, const struct i2c_device_id *i
     }
 
     i2c_set_clientdata(client, cw_bat);
-
+	cw_client=client;
     cw_bat->client = client;
     cw_bat->capacity = 1;
     cw_bat->voltage = 0;

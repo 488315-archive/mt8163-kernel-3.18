@@ -30,8 +30,9 @@ bool current_mode_is_fatory=false;
 bool yyd_main_server=false;
 bool mic_run_flag=false;
 
-//extern int cw2015_read_version(void);
+extern int cw2015_read_version(void);
 //extern int cw2015_read_all_reg(char *buf);
+extern int g_cw2015_capacity ;
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_EARLYSUSPEND
@@ -72,13 +73,18 @@ bool mic_run_flag=false;
 }
  static ssize_t yyd_misc_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-          char data[2] = {0};
+          char data[4] = {0};
 	if(mic_run_flag==true)
 	data[0]='1';
 	else 
 	data[0]='0';
 	
-	data[1]='\0';
+	data[1]=';';
+
+	if(yyd_main_server==true)
+	data[2]='1';
+	else 
+	data[2]='0';
 	return sprintf(buf, "%s\n", data);	
 
 
@@ -123,11 +129,9 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 
 static ssize_t misc_read(struct file *pfile, char __user *to, size_t len, loff_t *offset)
 {
-	//char buf,ret;
-	//printk("misc_read !\n");
-	
-	//buf= cw2015_read_version();
-	//ret=copy_to_user(to, &buf,  1);
+	 char strbuf[2],ret;	
+	strbuf[0]= cw2015_read_version();//g_cw2015_capacity;
+	ret=copy_to_user(to, strbuf,  strlen(strbuf) + 1);
 	return 0;
 }
 
