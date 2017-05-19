@@ -77,6 +77,8 @@ static int mtk_capture_probe(struct platform_device *pdev);
 static int mtk_capture_pcm_close(struct snd_pcm_substream *substream);
 static int mtk_asoc_capture_pcm_new(struct snd_soc_pcm_runtime *rtd);
 static int mtk_afe_capture_probe(struct snd_soc_platform *platform);
+extern void commit_status(char *switch_name);
+//extern bool yyd_main_server;
 
 static struct snd_pcm_hardware mtk_capture_hardware = {
 
@@ -389,17 +391,22 @@ static int mtk_capture_alsa_start(struct snd_pcm_substream *substream)
 	return 0;
 }
 
+extern void commit_status(char *switch_name);
+
 static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
-	PRINTK_AUDDRV("mtk_capture_pcm_trigger cmd = %d\n", cmd);
+	int ret;
+	PRINTK_AUDDRV("mic----mtk_capture_pcm_trigger cmd = %d\n", cmd);
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
 		return mtk_capture_alsa_start(substream);
 	case SNDRV_PCM_TRIGGER_STOP:
-	case SNDRV_PCM_TRIGGER_SUSPEND:
-		return mtk_capture_alsa_stop(substream);
+	case SNDRV_PCM_TRIGGER_SUSPEND:		
+		ret=mtk_capture_alsa_stop(substream);
+		 commit_status("5micon");
+		return ret;
 	}
 	return -EINVAL;
 }

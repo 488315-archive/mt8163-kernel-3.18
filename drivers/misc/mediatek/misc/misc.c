@@ -27,6 +27,8 @@ extern  void aw2013_breath_all(int led0,int led1,int led2);
 int danceflag=false;
 //static struct wake_lock m_lock;
 bool current_mode_is_fatory=false;
+bool yyd_main_server=false;
+bool mic_run_flag=false;
 
 //extern int cw2015_read_version(void);
 //extern int cw2015_read_all_reg(char *buf);
@@ -70,19 +72,15 @@ bool current_mode_is_fatory=false;
 }
  static ssize_t yyd_misc_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-#if 0
-	int ret;	
-	char data[2] = {0};
-	//ret=cw2015_read_version();
-	if(ret==0x6f)
+          char data[2] = {0};
+	if(mic_run_flag==true)
 	data[0]='1';
 	else 
 	data[0]='0';
 	
 	data[1]='\0';
 	return sprintf(buf, "%s\n", data);	
-#endif	
-return 0;
+
 
 }
  static DEVICE_ATTR(yyd_misc, S_IWUSR | S_IWGRP | S_IRUGO, yyd_misc_show, yyd_misc_store);
@@ -113,6 +111,11 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 	  {
 		if(pbuf[1] == '0'){current_mode_is_fatory=false;}
 		else if(pbuf[1] == '1'){current_mode_is_fatory=true;}			
+	  }
+	   else if(pbuf[0] == 'B')
+	  {
+		if(pbuf[1] == '1'){yyd_main_server=false;}
+		else if(pbuf[1] == '0'){yyd_main_server=true;}			
 	  }
 	 	
 	return len;

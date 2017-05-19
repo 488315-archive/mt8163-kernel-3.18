@@ -707,6 +707,7 @@ static int mtk_capture_alsa_start(struct snd_pcm_substream *substream)
 #endif
     return 0;
 }
+extern bool mic_run_flag;
 
 static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
@@ -724,6 +725,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 			}
 			
 		}
+		mic_run_flag=true;
             return mtk_capture_alsa_start(substream);
         case SNDRV_PCM_TRIGGER_STOP:
         case SNDRV_PCM_TRIGGER_SUSPEND:		
@@ -735,6 +737,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 			fpga_set_gpio_output(GPIO_RST_EN,0);
 			}
 		}
+		mic_run_flag=false;
             return ret;
     }
     return -EINVAL;
@@ -762,6 +765,7 @@ static int mtk_capture_pcm_copy(struct snd_pcm_substream *substream,
     ssize_t DMA_Read_Ptr = 0 , read_size = 0, read_count = 0;
     //struct snd_pcm_runtime *runtime = substream->runtime;
     unsigned long flags;
+	
 
    // PRINTK_AUD_UL1("5mic--->mtk_capture_pcm_copy pos = %lucount = %lu     time=%s\n ", pos, count,__TIME__);
     // get total bytes to copy
