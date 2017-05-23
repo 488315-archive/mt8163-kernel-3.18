@@ -1030,10 +1030,8 @@ static void fpga_get_gpio_infor(void)
 
 static void fpga_set_gpio_output(unsigned int GPIO, unsigned int output)
 {
-	printk("lifei++++++fpga+++%u+++%u\n",GPIO,output);
 	gpio_direction_output(GPIO, output);
-	gpio_set_value(GPIO, output);
-	printk("lifei------fpga--------\n");
+	gpio_set_value(GPIO, output);	
 }
 
 /* get LDO supply */

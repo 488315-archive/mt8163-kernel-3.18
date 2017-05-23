@@ -31,6 +31,7 @@ static struct switch_dev touchsensor_dev;
 static struct input_dev *touchsensor_input_dev;
 static struct hrtimer dance_timer;
 static unsigned long left_time=0,right_time=0;
+struct hrtimer audio_stop_timer;
 
 static unsigned int tp_irq;
 static struct pinctrl *pinctrl1;
@@ -185,6 +186,19 @@ printk("yydd17-------------\n");
 
 	return IRQ_HANDLED;
 }
+extern bool audio_stop_flag;
+extern bool yyd_main_server;
+
+enum hrtimer_restart commit_audio_hrtimer_func(struct hrtimer *timer)
+{	
+	if(audio_stop_flag ==true && yyd_main_server==false)
+	commit_status("5micoff");
+	else if(audio_stop_flag ==false)
+	commit_status("5micon");		
+	hrtimer_forward_now(&audio_stop_timer, ktime_set(1, 0)); 
+	
+	return HRTIMER_RESTART;
+}
 
 enum hrtimer_restart commit_delay_hrtimer_func(struct hrtimer *timer)
 {
@@ -301,6 +315,11 @@ static int tp_probe(struct platform_device *dev)
 	dance_timer.function = commit_delay_hrtimer_func;
 	hrtimer_start(&dance_timer, ktime, HRTIMER_MODE_REL);
 
+//---------audio timer---------------------------------
+	hrtimer_init(&audio_stop_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+	audio_stop_timer.function = commit_audio_hrtimer_func;
+	//hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+//--------------------------------------------------
 	printk("tp_probe====\n");
 	return 0;
 }

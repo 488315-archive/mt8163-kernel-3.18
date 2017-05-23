@@ -55,6 +55,7 @@
 #include <sound/pcm.h>
 #include <sound/soc.h>
 #include <mt-plat/mt_gpio.h>
+#include <linux/hrtimer.h>
 
 #if 0				/* no this */
 #include <mach/mt_clkbuf_ctl.h>
@@ -633,33 +634,12 @@ static int mt63xx_codec_startup(struct snd_pcm_substream *substream, struct snd_
 	/* pr_debug("-%s name = %s number = %d\n", __func__, substream->name, substream->number); */
 	return 0;
 }
-extern bool yyd_main_server;
-extern void commit_status(char *switch_name);
 
 static int mt63xx_codec_prepare(struct snd_pcm_substream *substream, struct snd_soc_dai *Daiport)
 {
-	int time_out=0;
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-		printk("mt63xx_codec_prepare +++ SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
+		pr_debug("mt63xx_codec_prepare +++ SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
 			 substream->runtime->rate);
-///////////////by lifei/////////////////////
-//调用单mic前，要先把5mic关了，因为不能同时录音。
-//mt8163平台只有一个音频buffer。mt8735就可以同时录音
-		if(substream->runtime->rate==48000)
-		{	
-			commit_status("5micoff");
-			while(1)
-			{
-			mdelay(1);
-			if(yyd_main_server == true)break;
-			time_out++;
-			if(time_out >1500)break;
-			}
-	    	}
-		printk("mt63xx_codec_prepare---- SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
-			 substream->runtime->rate);
-////////////////endif////////////////////////
-
 		mBlockSampleRate[AUDIO_ANALOG_DEVICE_IN_ADC] = substream->runtime->rate;
 	} else if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
 		pr_debug("mt63xx_codec_prepare set up SNDRV_PCM_STREAM_PLAYBACK rate = %d\n",

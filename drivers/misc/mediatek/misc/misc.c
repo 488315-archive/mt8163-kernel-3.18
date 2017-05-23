@@ -15,6 +15,7 @@
 #include <linux/delay.h>
 #include <linux/wakelock.h>
 #include <linux/fs.h>
+#include <linux/hrtimer.h>
 
 /*----------------------------------------------------------------------------*/
 #define DEV_NAME   "misc_yyd"
@@ -29,6 +30,8 @@ int danceflag=false;
 bool current_mode_is_fatory=false;
 bool yyd_main_server=false;
 bool mic_run_flag=false;
+bool audio_stop_flag=false;
+extern struct hrtimer audio_stop_timer;
 
 extern int cw2015_read_version(void);
 //extern int cw2015_read_all_reg(char *buf);
@@ -73,7 +76,7 @@ extern int g_cw2015_capacity ;
 }
  static ssize_t yyd_misc_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-          char data[4] = {0};
+          char data[7] = {0};
 	if(mic_run_flag==true)
 	data[0]='1';
 	else 
@@ -85,6 +88,14 @@ extern int g_cw2015_capacity ;
 	data[2]='1';
 	else 
 	data[2]='0';
+
+	data[3]=';';
+
+	if(audio_stop_flag==true)
+	data[4]='1';
+	else 
+	data[4]='0';
+	
 	return sprintf(buf, "%s\n", data);	
 
 
@@ -103,6 +114,7 @@ extern int g_cw2015_capacity ;
 	 return nonseekable_open(inode, file);
 
  }
+extern bool audio_time_cannel_flag;
 
 static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len, loff_t * offset)
 {
@@ -120,10 +132,15 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 	  }
 	   else if(pbuf[0] == 'B')
 	  {
-		if(pbuf[1] == '1'){yyd_main_server=false;}
+		if(pbuf[1] == '1')
+		{
+			if(yyd_main_server==true)			
+			    hrtimer_cancel(&audio_stop_timer);
+			
+			   yyd_main_server=false;
+		}
 		else if(pbuf[1] == '0'){yyd_main_server=true;}			
-	  }
-	 	
+	  }	
 	return len;
 }
 
@@ -131,7 +148,7 @@ static ssize_t misc_read(struct file *pfile, char __user *to, size_t len, loff_t
 {
 	 char strbuf[2],ret;	
 	strbuf[0]= cw2015_read_version();//g_cw2015_capacity;
-	ret=copy_to_user(to, strbuf,  strlen(strbuf) + 1);
+	ret=copy_to_user(to, strbuf,   1);
 	return 0;
 }
 

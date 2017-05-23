@@ -45,7 +45,7 @@
 /*****************************************************************************
  *                E X T E R N A L   R E F E R E N C E S
  *****************************************************************************/
-
+#include <linux/hrtimer.h>
 #include <linux/dma-mapping.h>
 #include "AudDrv_Common.h"
 #include "AudDrv_Def.h"
@@ -67,6 +67,10 @@ static struct snd_dma_buffer *Capture_dma_buf;
 static AudioDigtalI2S *mAudioDigitalI2S;
 static bool mCaptureUseSram;
 static DEFINE_SPINLOCK(auddrv_ULInCtl_lock);
+extern bool yyd_main_server;
+extern void commit_status(char *switch_name);
+extern bool audio_stop_flag;
+extern struct hrtimer audio_stop_timer;
 
 /*
  *    function implementation
@@ -77,7 +81,7 @@ static int mtk_capture_probe(struct platform_device *pdev);
 static int mtk_capture_pcm_close(struct snd_pcm_substream *substream);
 static int mtk_asoc_capture_pcm_new(struct snd_soc_pcm_runtime *rtd);
 static int mtk_afe_capture_probe(struct snd_soc_platform *platform);
-extern void commit_status(char *switch_name);
+//extern void commit_status(char *switch_name);
 //extern bool yyd_main_server;
 
 static struct snd_pcm_hardware mtk_capture_hardware = {
@@ -319,7 +323,34 @@ static struct snd_pcm_hw_constraint_list constraints_sample_rates = {
 static int mtk_capture_pcm_open(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-	int ret = 0;
+	int time_out, ret = 0;
+	static bool startup=false;
+printk("311111 SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
+				 substream->runtime->rate);
+
+///////////////by lifei/////////////////////
+//调用单mic前，要先把5mic关了，因为不能同时录音。
+//mt8163平台只有一个音频buffer。mt8735就可以同时录音
+
+#if 1
+		if(substream->runtime->rate==48000 || startup==true)
+		{	
+			audio_stop_flag=true;
+			commit_status("5micoff");
+			hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+			
+			while(1)
+			{
+			mdelay(1);
+			//msleep(1);
+			if(yyd_main_server == true)break;
+			time_out++;
+			if(time_out >15000)break;
+			}
+		}
+		startup=true;
+#endif
+//////////////////////end//////////////////	
 
 	AudDrv_ANA_Clk_On();
 	AudDrv_Clk_On();
@@ -391,8 +422,6 @@ static int mtk_capture_alsa_start(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-extern void commit_status(char *switch_name);
-
 static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
 	int ret;
@@ -405,7 +434,11 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:		
 		ret=mtk_capture_alsa_stop(substream);
-		 commit_status("5micon");
+		//commit_status("5micon");
+		audio_stop_flag=false;
+		  hrtimer_cancel(&audio_stop_timer);
+		  mdelay(1);
+		  hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
 		return ret;
 	}
 	return -EINVAL;
