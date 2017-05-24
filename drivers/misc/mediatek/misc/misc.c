@@ -114,17 +114,17 @@ extern int g_cw2015_capacity ;
 	 return nonseekable_open(inode, file);
 
  }
-extern bool audio_time_cannel_flag;
+ 
+ bool system_shutdown_flag=false;
 
 static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len, loff_t * offset)
 {
-	 char pbuf[50] ;
-	
+	 char pbuf[50] ;	
 	   if(copy_from_user(pbuf, buf,len))
 	   {
 		   return	 -EFAULT;  
 	   }
-	    printk("111111%c,%d\n",pbuf[0],pbuf[1]);
+	    printk("111111%c,%c\n",pbuf[0],pbuf[1]);
 	  if(pbuf[0] == 'A')
 	  {
 		if(pbuf[1] == '0'){current_mode_is_fatory=false;}
@@ -140,7 +140,11 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 			   yyd_main_server=false;
 		}
 		else if(pbuf[1] == '0'){yyd_main_server=true;}			
-	  }	
+	  }
+	   else if(pbuf[0] == 'C'  && pbuf[1] == 'C')
+	   {	
+		    system_shutdown_flag=true;
+	   }
 	return len;
 }
 

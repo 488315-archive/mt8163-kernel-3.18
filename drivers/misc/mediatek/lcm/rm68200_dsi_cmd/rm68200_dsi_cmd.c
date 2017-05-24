@@ -52,7 +52,7 @@ static void lcm_get_gpio_infor(void)
 
 static void lcm_set_gpio_output(unsigned int GPIO, unsigned int output)
 {
-	printk("lifei++++++++++++%ud\n",output);
+	printk("lifei+++++LCM+++++++%ud\n",output);
 	gpio_direction_output(GPIO, output);
 	gpio_set_value(GPIO, output);
 	printk("lifei--------------\n");
@@ -854,10 +854,18 @@ static void dsp_lcm_init(void)
 {
 	push_table(lcm_initialization_setting, sizeof(lcm_initialization_setting) / sizeof(struct LCM_setting_table), 1);
 }
+extern void spk_ctl_code63xx(int val) ;
+extern bool system_shutdown_flag;
+extern bool yyd_audio_shutdown_flag;
 
 static void lcm_suspend(void)
 {	
-	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);	
+	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);
+	if(system_shutdown_flag==true)
+	{		
+		spk_ctl_code63xx(0);
+		 yyd_audio_shutdown_flag=true;
+	}
 	MDELAY(20);
 	push_table(lcm_deep_sleep_mode_in_setting, sizeof(lcm_deep_sleep_mode_in_setting) / sizeof(struct LCM_setting_table), 1);	
 }

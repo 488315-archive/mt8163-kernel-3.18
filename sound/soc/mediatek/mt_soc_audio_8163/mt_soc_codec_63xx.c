@@ -1428,7 +1428,7 @@ do { \
 	mt_set_gpio_out(pin_extspkamp, GPIO_OUT_ONE); \
 } while (0)
 #endif
-
+ bool yyd_audio_shutdown_flag=false;
 extern void spk_ctl_code63xx(int val) ;
 static void spk_ic_mode(int mode)
 {
@@ -1483,6 +1483,7 @@ static bool first_boot=true;
 
 	if (enable) {
 		PRINTK_AUDDRV("Ext_Speaker_Amp_Change ON+\n");
+		if( !yyd_audio_shutdown_flag)
 		spk_ic_mode(2);
 		msleep(SPK_WARM_UP_TIME);
 #ifndef CONFIG_MTK_SPEAKER
