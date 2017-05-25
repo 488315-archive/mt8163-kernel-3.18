@@ -212,7 +212,7 @@ static struct LCM_setting_table lcm_initialization_setting[] = {
 	
 	{0x55, 1,{0x00}},
 	
-	{0x5F, 1,{0x11}},
+//	{0x5F, 1,{0x11}},
 	
 	
 	
@@ -816,7 +816,7 @@ static void lcm_get_params(LCM_PARAMS *params)
 	
 		// DSI
 		/* Command mode setting */
-		params->dsi.LANE_NUM				= LCM_TWO_LANE;
+		params->dsi.LANE_NUM				= LCM_FOUR_LANE;
 		//The following defined the fomat for data coming from LCD engine.
 		params->dsi.data_format.color_order = LCM_COLOR_ORDER_RGB;
 		params->dsi.data_format.trans_seq   = LCM_DSI_TRANS_SEQ_MSB_FIRST;
@@ -845,7 +845,7 @@ static void lcm_get_params(LCM_PARAMS *params)
 		// Bit rate calculation
 		//params->dsi.pll_div1=37;		// fref=26MHz, fvco=fref*(div1+1)	(div1=0~63, fvco=500MHZ~1GHz)
 		//params->dsi.pll_div2=1; 		// div2=0~15: fout=fvo/(2*div2)
-		params->dsi.PLL_CLOCK = 450;
+		params->dsi.PLL_CLOCK = 220;
 }
 
 //static unsigned int lcm_compare_id(void);
