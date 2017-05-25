@@ -320,11 +320,14 @@ static struct snd_pcm_hw_constraint_list constraints_sample_rates = {
 	.list = soc_normal_supported_sample_rates,
 };
 
+static bool startup=false;
 static int mtk_capture_pcm_open(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
-	int time_out, ret = 0;
-	static bool startup=false;
+	int  ret = 0;
+	unsigned int time_out=0;		
+	
+	
 printk("311111 SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
 				 substream->runtime->rate);
 
@@ -341,14 +344,18 @@ printk("311111 SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
 			
 			while(1)
 			{
-			mdelay(1);
-			//msleep(1);
-			if(yyd_main_server == true)break;
-			time_out++;
-			if(time_out >15000)break;
+				mdelay(1);
+				//msleep(1);
+				if(yyd_main_server == true)break;
+				time_out++;
+				if(time_out >15000)
+				{
+				   audio_stop_flag=false;
+				   break;
+				}
 			}
 		}
-		startup=true;
+		//startup=true;
 #endif
 //////////////////////end//////////////////	
 
@@ -401,6 +408,9 @@ printk("311111 SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
 
 static int mtk_capture_pcm_close(struct snd_pcm_substream *substream)
 {
+	printk("3888 SNDRV_PCM_STREAM_CAPTURE rate = %d\n",
+					 substream->runtime->rate);
+
 	if (mCaptureUseSram == false)
 		AudDrv_Emi_Clk_Off();
 
@@ -411,6 +421,17 @@ static int mtk_capture_pcm_close(struct snd_pcm_substream *substream)
 	AudDrv_ADC_Clk_Off();
 	AudDrv_Clk_Off();
 	AudDrv_ANA_Clk_Off();
+
+#if 1
+	if( startup == true)
+	{
+	audio_stop_flag=false;
+	  hrtimer_cancel(&audio_stop_timer);
+	  mdelay(1);
+	  hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+	}
+	  startup=true;//屏蔽第一次开机open pcm	  
+#endif
 	return 0;
 }
 
@@ -425,7 +446,7 @@ static int mtk_capture_alsa_start(struct snd_pcm_substream *substream)
 static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 {
 	int ret;
-	PRINTK_AUDDRV("mic----mtk_capture_pcm_trigger cmd = %d\n", cmd);
+	printk("mic----mtk_capture_pcm_trigger cmd = %d\n", cmd);
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
@@ -434,11 +455,13 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:		
 		ret=mtk_capture_alsa_stop(substream);
+#if 0
 		//commit_status("5micon");
 		audio_stop_flag=false;
 		  hrtimer_cancel(&audio_stop_timer);
 		  mdelay(1);
 		  hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+#endif		  
 		return ret;
 	}
 	return -EINVAL;
