@@ -104,6 +104,10 @@ extern struct hardware_info current_tp_info;
 static unsigned int touch_irq = 0;
 #define ICN_GPIO_AS_INT(pin) tpd_gpio_as_int(pin)
 #define ICN_GPIO_OUTPUT(pin, level) tpd_gpio_output(pin, level)
+ int ICN_Log_level=0;
+
+#define icn85xx_trace(fmt, args...)  if(0xff&ICN_Log_level){  printk(fmt, ##args); }
+#define icn85xx_error(fmt, args...)  if(0xff&ICN_Log_level){  printk(fmt, ##args); }
 
 
 static char firmware[128] =  {"icn85xx_firmware"};//{"/fw.bin"};

@@ -206,16 +206,16 @@ typedef unsigned int   U32;
 //#define DBG_PROC_INFO
 #define DBG_PROC_ERROR
 
-
+#if 0
 #ifdef DBG_ICN85xx_TRACE
 #define icn85xx_trace(fmt, args...)   \
-        do{                              \
-                printk(fmt, ##args);     \
-        }while(0)
+    do{                              \
+            printk(fmt, ##args);     \
+    }while(0)
 #else
 #define icn85xx_trace(fmt, args...)   //
 #endif
-
+#endif
 
 #ifdef DBG_ICN85xx_POINT
 #define icn85xx_point_info(fmt, args...)   \
@@ -234,7 +234,7 @@ typedef unsigned int   U32;
 #else
 #define icn85xx_info(fmt, args...)   //
 #endif
-
+#if 0
 #ifdef DBG_ICN85xx_ERROR
 #define icn85xx_error(fmt, args...)   \
         do{                              \
@@ -243,7 +243,7 @@ typedef unsigned int   U32;
 #else
 #define icn85xx_error(fmt, args...)   //
 #endif
-
+#endif
 #ifdef DBG_FLASH_INFO
 #define flash_info(fmt, args...)   \
         do{                              \
