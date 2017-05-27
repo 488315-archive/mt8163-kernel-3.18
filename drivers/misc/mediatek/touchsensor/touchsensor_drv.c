@@ -29,9 +29,10 @@
 
 static struct switch_dev touchsensor_dev;
 static struct input_dev *touchsensor_input_dev;
-static struct hrtimer dance_timer;
-static unsigned long left_time=0,right_time=0;
+static struct hrtimer dance_timer,touch_time;
+static unsigned long left_time=0,right_time=0,dis_time=0,left_touch=0,right_touch=0;
 struct hrtimer audio_stop_timer;
+static int timer_sta = 0;
 
 static unsigned int tp_irq;
 static struct pinctrl *pinctrl1;
@@ -112,7 +113,7 @@ static irqreturn_t tp_eint8_interrupt_handler(int irq, void *dev_id)
 #else
 	commit_status("t_head");//du zi
 #endif	
-	printk("yydd8-----------\n");
+	printk("yydd8----------\n");
 
 	return IRQ_HANDLED;
 }
@@ -126,7 +127,7 @@ static irqreturn_t tp_eint9_interrupt_handler(int irq, void *dev_id)
 #else	
 		commit_status("yyd4");//cntoen
 #endif
-	printk("yydd9-----------\n");
+	printk("yydd9----------\n");
 
 	return IRQ_HANDLED;
 }
@@ -142,6 +143,20 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 		input_sync(touchsensor_input_dev);
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,0);
 		input_sync(touchsensor_input_dev);
+
+		 left_touch=jiffies;
+		dis_time = abs(left_touch - right_touch);
+		if(dis_time < HZ)
+		{
+			left_touch = 0;
+			right_touch = 0;			
+			if(timer_sta == 0)
+			{
+				timer_sta = 1;
+				hrtimer_forward_now(&touch_time, ktime_set(2, 0));
+				hrtimer_start(&touch_time, ktime_set(2, 0), HRTIMER_MODE_REL); 
+			}
+		}
 #endif
 	printk("yydd10-----------\n");
 
@@ -158,6 +173,20 @@ static irqreturn_t tp_eint11_interrupt_handler(int irq, void *dev_id)
 		input_sync(touchsensor_input_dev);
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEDOWN,0);
 		input_sync(touchsensor_input_dev);
+		
+		  right_touch=jiffies;
+		   dis_time = abs(left_touch - right_touch);
+		   if(dis_time < HZ)
+		   {
+			   left_touch = 0;
+			   right_touch = 0; 		   
+			   if(timer_sta == 0)
+			   {
+				   timer_sta = 1;
+				   hrtimer_forward_now(&touch_time, ktime_set(2, 0));
+				   hrtimer_start(&touch_time, ktime_set(2, 0), HRTIMER_MODE_REL); 
+			   }
+		   }
 #endif	
 	printk("yydd11-----------\n");
 
@@ -199,6 +228,15 @@ enum hrtimer_restart commit_audio_hrtimer_func(struct hrtimer *timer)
 	
 	return HRTIMER_RESTART;
 }
+enum hrtimer_restart double_touch_commit(struct hrtimer *timer)
+{
+	if((gpio_get_value(int10_gpio32) == 0) && (0 == gpio_get_value(int11_gpio43)))
+	{
+		commit_status("dance");		
+	}
+	timer_sta = 0;	
+	return HRTIMER_NORESTART;
+}
 
 enum hrtimer_restart commit_delay_hrtimer_func(struct hrtimer *timer)
 {
@@ -222,7 +260,7 @@ static int tp_probe(struct platform_device *dev)
 	struct device_node *node = NULL;
 	int ret,err;
 	int debounce=17;
-	ktime_t ktime;
+	//ktime_t ktime;
 	touchsensor_dev.name = TP_NAME;
 	touchsensor_dev.index = 0;
 	touchsensor_dev.state = 0;
@@ -309,17 +347,21 @@ static int tp_probe(struct platform_device *dev)
 	}
 /*********************************************************/
 
-		
-	ktime = ktime_set(1, 0);	
+#ifdef CONFIG_Y50_TOUCHSENSOR		
 	hrtimer_init(&dance_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	dance_timer.function = commit_delay_hrtimer_func;
-	hrtimer_start(&dance_timer, ktime, HRTIMER_MODE_REL);
-
+	hrtimer_start(&dance_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
+#endif
 //---------audio timer---------------------------------
 	hrtimer_init(&audio_stop_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	audio_stop_timer.function = commit_audio_hrtimer_func;
 	//hrtimer_start(&audio_stop_timer, ktime_set(1, 0), HRTIMER_MODE_REL);
 //--------------------------------------------------
+
+//----------------------dual touch---------------
+		hrtimer_init(&touch_time, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+		touch_time.function = double_touch_commit;
+//--------------------------------------------
 	printk("tp_probe====\n");
 	return 0;
 }
