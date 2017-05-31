@@ -153,6 +153,20 @@ int cw2015_read_version(void)
 	//printk("ppppppppp--%d\n",reg_val);
 	return reg_val;
 }
+int cw2015_read_temp(void)
+{
+	int i=0,ret;
+         u8 reg_templ,reg_temph;
+	while(i++ <4)
+	{
+		ret=cw_read(cw_client, REG_VTEMPL, &reg_templ);
+		ret=cw_read(cw_client, REG_VTEMPH, &reg_temph);
+		if(ret >0)break;//return reg_val;
+	}
+	 ret=(25-((reg_temph*256+reg_templ)-3010)/8);
+	//printk("ppppppppp==%d\n",ret);
+	return ret;
+}
 
 /*CW2015 update profile function, Often called during initialization*/
 int cw_update_config_info(struct cw_battery *cw_bat)
