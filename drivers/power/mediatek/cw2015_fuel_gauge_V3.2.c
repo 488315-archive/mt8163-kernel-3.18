@@ -12,6 +12,15 @@
 #include <linux/slab.h>
 
 
+#include <mt-plat/upmu_common.h>
+#include <mt-plat/charging.h>
+#include <mt-plat/battery_meter.h>
+#include <mt-plat/battery_common.h>
+#include <mach/mt_battery_meter.h>
+#include <mach/mt_charging.h>
+#include <mach/mt_pmic.h>
+
+
 #define CWFG_ENABLE_LOG 0 //CHANGE   Customer need to change this for enable/disable log
 #define CWFG_I2C_BUSNUM 2 //CHANGE   Customer need to change this number according to the principle of hardware
 #define DOUBLE_SERIES_BATTERY 0
@@ -727,6 +736,8 @@ static int cw_battery_get_property(struct power_supply *psy,
     switch (psp) {
     case POWER_SUPPLY_PROP_CAPACITY:
             val->intval = cw_bat->capacity;
+	   //---------by lifei----------		
+	   if(val->intval ==0 && BMT_status.charger_exist==KAL_TRUE) val->intval =1;
             break;
 	/*
     case POWER_SUPPLY_PROP_STATUS:   //Chaman charger ic will give a real value
