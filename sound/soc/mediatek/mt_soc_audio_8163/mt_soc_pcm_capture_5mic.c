@@ -716,7 +716,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
     switch (cmd)
     {
         case SNDRV_PCM_TRIGGER_START:
-        case SNDRV_PCM_TRIGGER_RESUME:
+    //    case SNDRV_PCM_TRIGGER_RESUME:
 		if(substream->stream ==SNDRV_PCM_STREAM_CAPTURE)
 		{
 			if(substream->runtime->rate == Samp_96)
@@ -728,7 +728,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		mic_run_flag=true;
             return mtk_capture_alsa_start(substream);
         case SNDRV_PCM_TRIGGER_STOP:
-        case SNDRV_PCM_TRIGGER_SUSPEND:		
+      //  case SNDRV_PCM_TRIGGER_SUSPEND:		
 		ret=mtk_capture_alsa_stop(substream);
 		if(substream->stream ==SNDRV_PCM_STREAM_CAPTURE)
 		{
