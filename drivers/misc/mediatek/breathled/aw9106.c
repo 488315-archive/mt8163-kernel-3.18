@@ -754,14 +754,15 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 
 			case 'R':
 			case 'r':
-				AW9106_SoftReset();				
+				 AW9106_SoftReset();				
 				AW9106_i2c_write_reg(0x12,0x00);    
 				AW9106_i2c_write_reg(0x13,0x00);    
-				AW9106_i2c_write_reg(0x14,0x24);
 				AW9106_i2c_write_reg(0x04,0x02);   //OUT2 OUT5
 				AW9106_i2c_write_reg(0x05,0x04);    	
-
+				AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
+				 AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x03);
+				AW9106_i2c_write_reg(0x14,0x24);
 				AW9106_i2c_write_reg(0x11,0x83);
 			//	printk("daviekuo: RRRRRRRR\n");
 	 			break;
@@ -769,24 +770,28 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 			case 'g':
 				 AW9106_SoftReset();				
 				 AW9106_i2c_write_reg(0x12,0x00);	 
-				 AW9106_i2c_write_reg(0x13,0x00);	 
-				 AW9106_i2c_write_reg(0x14,0x12);
+				 AW9106_i2c_write_reg(0x13,0x00);	 				
 				 AW9106_i2c_write_reg(0x04,0x01);	//OUT1 OUT4
 				 AW9106_i2c_write_reg(0x05,0x02);	  
+				 AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
+				AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x03);
+				 AW9106_i2c_write_reg(0x14,0x12);
 				AW9106_i2c_write_reg(0x11,0x83);
 				
 			break;
 			case 'B':
 			case 'b':
 	//			 AW9106_Hw_reset();
-			     AW9106_SoftReset(); 			
+			    AW9106_SoftReset(); 			
 				 AW9106_i2c_write_reg(0x12,0x00);	 
 				 AW9106_i2c_write_reg(0x13,0x00);	 
-			     AW9106_i2c_write_reg(0x14,0x09); 
 				 AW9106_i2c_write_reg(0x04,0x00);	 //OUT0 OUT3
 				 AW9106_i2c_write_reg(0x05,0x09); 
+				 AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
+				AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x03);
+				  AW9106_i2c_write_reg(0x14,0x09); 
 				AW9106_i2c_write_reg(0x11,0x83);		
 				break;		
 				
@@ -846,6 +851,7 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 			default:
 				return -2;					
 		}
+#if 0
 		if(led == 'E' || led == 'e')
 		{
 			if(led_ear_freq == 'L' || led_ear_freq == 'l')
@@ -884,6 +890,7 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 			}
 
 		}
+#endif
 	}
 	else
 		return -1;
