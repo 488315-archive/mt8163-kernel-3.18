@@ -755,43 +755,39 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 			case 'R':
 			case 'r':
 				AW9106_SoftReset();				
-				AW9106_i2c_write_reg(0x12,0x00);   //OUT4~5配置为呼吸灯模式
-				AW9106_i2c_write_reg(0x13,0x00);   //OUT0~3配置为呼吸灯模式
-				AW9106_i2c_write_reg(0x14,0x3f);//自主呼吸使能		
-				AW9106_i2c_write_reg(0x04,0x02);   //OUT4-OUT5自主呼吸BLINK模式使能 	out5/out2 R  out4/out1 G   out3/out0 B	
-				AW9106_i2c_write_reg(0x05,0x04);   //OUT0-OUT3自主呼吸BLINK模式使能		
+				AW9106_i2c_write_reg(0x12,0x00);    
+				AW9106_i2c_write_reg(0x13,0x00);    
+				AW9106_i2c_write_reg(0x14,0x24);
+				AW9106_i2c_write_reg(0x04,0x02);   //OUT2 OUT5
+				AW9106_i2c_write_reg(0x05,0x04);    	
 
-				AW9106_i2c_write_reg(0x11,0x01);
-				AW9106_i2c_write_reg(0x11,0x81);
+				AW9106_i2c_write_reg(0x11,0x03);
+				AW9106_i2c_write_reg(0x11,0x83);
 			//	printk("daviekuo: RRRRRRRR\n");
 	 			break;
 			case 'G':
 			case 'g':
 				 AW9106_SoftReset();				
-				 AW9106_i2c_write_reg(0x12,0x00);	//OUT4~5配置为呼吸灯模式
-				 AW9106_i2c_write_reg(0x13,0x00);	//OUT0~3配置为呼吸灯模式
-				 AW9106_i2c_write_reg(0x14,0x3f);//自主呼吸使能
-				 AW9106_i2c_write_reg(0x04,0x01);	//OUT4-OUT5自主呼吸BLINK模式使能		out5/out2 R  out4/out1 G   out3/out0 B	
-				 AW9106_i2c_write_reg(0x05,0x02);	//OUT0-OUT3自主呼吸BLINK模式使能
-				 //AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	 (256+512)	+	(256+512)
-				 //AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置 
-				AW9106_i2c_write_reg(0x11,0x01);
-				AW9106_i2c_write_reg(0x11,0x81);
+				 AW9106_i2c_write_reg(0x12,0x00);	 
+				 AW9106_i2c_write_reg(0x13,0x00);	 
+				 AW9106_i2c_write_reg(0x14,0x12);
+				 AW9106_i2c_write_reg(0x04,0x01);	//OUT1 OUT4
+				 AW9106_i2c_write_reg(0x05,0x02);	  
+				AW9106_i2c_write_reg(0x11,0x03);
+				AW9106_i2c_write_reg(0x11,0x83);
 				
-				break;
+			break;
 			case 'B':
 			case 'b':
 	//			 AW9106_Hw_reset();
 			     AW9106_SoftReset(); 			
-				 AW9106_i2c_write_reg(0x12,0x00);	//OUT4~5配置为呼吸灯模式
-				 AW9106_i2c_write_reg(0x13,0x00);	//OUT0~3配置为呼吸灯模式
-			     AW9106_i2c_write_reg(0x14,0x3f);//自主呼吸使能		
-				 AW9106_i2c_write_reg(0x04,0x00);	//OUT4-OUT5自主呼吸BLINK模式使能		out5/out2 R  out4/out1 G   out3/out0 B	
-				 AW9106_i2c_write_reg(0x05,0x09);	//OUT0-OUT3自主呼吸BLINK模式使能
-				 //AW9106_i2c_write_reg(0x15,0x12);	 //淡进淡出时间设置    (256+512)  +   (256+512)
-				 //AW9106_i2c_write_reg(0x16,0x09);	 //全亮全暗时间设置 			 
-				AW9106_i2c_write_reg(0x11,0x01);
-				AW9106_i2c_write_reg(0x11,0x81);		
+				 AW9106_i2c_write_reg(0x12,0x00);	 
+				 AW9106_i2c_write_reg(0x13,0x00);	 
+			     AW9106_i2c_write_reg(0x14,0x09); 
+				 AW9106_i2c_write_reg(0x04,0x00);	 //OUT0 OUT3
+				 AW9106_i2c_write_reg(0x05,0x09); 
+				AW9106_i2c_write_reg(0x11,0x03);
+				AW9106_i2c_write_reg(0x11,0x83);		
 				break;		
 				
 			case 'X':						//RG
