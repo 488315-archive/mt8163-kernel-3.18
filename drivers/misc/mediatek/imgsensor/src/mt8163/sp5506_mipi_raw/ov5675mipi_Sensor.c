@@ -532,7 +532,7 @@ write_cmos_sensor(0x3734,0x00);
 #ifdef CONFIG_Y50_TOUCHSENSOR	
 write_cmos_sensor(0x373d,0x24);   // "24"flip off ; "26"flip on
 #else
-write_cmos_sensor(0x373d,0x26);   // "24"flip off ; "26"flip on
+write_cmos_sensor(0x373d,0x24);   // "24"flip off ; "26"flip on
 #endif
 write_cmos_sensor(0x3764,0x20);
 write_cmos_sensor(0x3765,0x20);
@@ -579,7 +579,7 @@ write_cmos_sensor(0x381e,0x02);
 
 #else
 	//if(current_mode_is_fatory)
-	write_cmos_sensor(0x3820,0xb8);     // "88" mirror on    "80" mirror off
+	write_cmos_sensor(0x3820,0x80);     // "88" mirror on    "80" mirror off
 	//else	
 	//write_cmos_sensor(0x3820,0xb0);     // "88" mirror on    "80" mirror off
 #endif
