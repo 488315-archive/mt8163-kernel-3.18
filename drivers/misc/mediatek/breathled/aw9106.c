@@ -756,7 +756,7 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 				AW9106_i2c_write_reg(0x04,0x02);   //OUT2 OUT5
 				AW9106_i2c_write_reg(0x05,0x04);    	
 				AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
-				 AW9106_i2c_write_reg(0x16,0x20);//全亮全暗时间设置				
+				 AW9106_i2c_write_reg(0x16,0x18);//全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x02);
 				AW9106_i2c_write_reg(0x14,0x24);
 				AW9106_i2c_write_reg(0x11,0x82);
@@ -769,7 +769,7 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 				 AW9106_i2c_write_reg(0x04,0x01);	//OUT1 OUT4
 				 AW9106_i2c_write_reg(0x05,0x02);	  
 				 AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
-				AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置				
+				AW9106_i2c_write_reg(0x16,0x18);	  //全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x02);
 				 AW9106_i2c_write_reg(0x14,0x12);
 				AW9106_i2c_write_reg(0x11,0x82);
@@ -783,7 +783,7 @@ static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr,
 				 AW9106_i2c_write_reg(0x04,0x00);	 //OUT0 OUT3
 				 AW9106_i2c_write_reg(0x05,0x09); 
 				 AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
-				AW9106_i2c_write_reg(0x16,0x09);	  //全亮全暗时间设置				
+				AW9106_i2c_write_reg(0x16,0x18);	  //全亮全暗时间设置				
 				AW9106_i2c_write_reg(0x11,0x02);
 				  AW9106_i2c_write_reg(0x14,0x09); 
 				AW9106_i2c_write_reg(0x11,0x82);		
