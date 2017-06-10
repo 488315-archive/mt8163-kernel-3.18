@@ -192,13 +192,17 @@ int disp_pwm_get_max_backlight(disp_pwm_id_t id)
 /* For backward compatible */
 int disp_bls_set_backlight(int level_1024)
 {
+	static bool i=0;
+
+printk("3333333disp_bls_set_backlight===%d\n",level_1024);
 //////////by lifei////////////
 #if 1
-	static bool i=0;
-	if(i ==0)
+	
+	if(i ==0 && level_1024 ==409)
 	{
 	   i=1;
-	  return 0;
+	   level_1024=393;
+	  //return 0;
 	 }
 #endif
 ////////end////////////////
