@@ -30,7 +30,7 @@
 static struct switch_dev touchsensor_dev;
 static struct input_dev *touchsensor_input_dev;
 static struct hrtimer dance_timer,touch_time;
-static unsigned long left_time=0,right_time=0,dis_time=0,left_touch=0,right_touch=0;
+static unsigned long left_time=0,right_time=0;
 struct hrtimer audio_stop_timer;
 static int timer_sta = 0;
 
@@ -38,6 +38,12 @@ static unsigned int tp_irq;
 static struct pinctrl *pinctrl1;
 static struct pinctrl_state *tp_int8, *tp_int9, *tp_int10, *tp_int11, *tp_int16, *tp_int17;
 static unsigned int int8_gpio30,int9_gpio31,int10_gpio32,int11_gpio43,int16_gpio48,int17_gpio49;
+
+#ifdef CONFIG_Y50_TOUCHSENSOR
+
+#else
+static unsigned long dis_time=0,left_touch=0,right_touch=0;
+#endif
 
 void commit_status(char *switch_name)
 {
