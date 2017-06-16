@@ -805,8 +805,9 @@ static int cw2015_probe(struct i2c_client *client, const struct i2c_device_id *i
 	
     ret = cw_init(cw_bat);
     while ((loop++ < 200) && (ret != 0)) {
-		msleep(200);
+		msleep(9);
         ret = cw_init(cw_bat);
+	printk("%s : cw2015 while(1)!\n", __func__);
     }
     if (ret) {
 		printk("%s : cw2015 init fail!\n", __func__);
