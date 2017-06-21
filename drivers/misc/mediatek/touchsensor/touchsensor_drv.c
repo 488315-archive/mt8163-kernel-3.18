@@ -114,8 +114,7 @@ static irqreturn_t tp_eint8_interrupt_handler(int irq, void *dev_id)
 {
 	
 #ifdef CONFIG_Y50_TOUCHSENSOR	
-		commit_status("left");
-		left_time=jiffies;
+		commit_status("back");
 #else
 	commit_status("t_head");//du zi
 #endif	
@@ -128,8 +127,7 @@ static irqreturn_t tp_eint9_interrupt_handler(int irq, void *dev_id)
 {
 	
 #ifdef CONFIG_Y50_TOUCHSENSOR
-		commit_status("right");
-		right_time=jiffies;
+		commit_status("head");
 #else	
 		commit_status("yyd4");//cntoen
 #endif
@@ -141,7 +139,8 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 {
 
 #ifdef CONFIG_Y50_TOUCHSENSOR	
-		commit_status("head");
+		commit_status("left");
+		left_time=jiffies;
 #else	
 		commit_status("yyd6");	 //volup
 		
@@ -171,7 +170,8 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 static irqreturn_t tp_eint11_interrupt_handler(int irq, void *dev_id)
 {
 #ifdef CONFIG_Y50_TOUCHSENSOR
-			commit_status("back");
+			commit_status("right");
+		         right_time=jiffies;
 #else
 		commit_status("yyd5");//voldown
 	
