@@ -24,6 +24,10 @@ LCM_DRIVER *lcm_driver_list[] = {
 #if defined(RM68200_DSI_CMD)
 		&rm68200_dsi_lcm_drv,
 #endif
+#if defined(JD_9365_CPT)
+		&jd_9365_cpt,
+#endif
+
 #if defined(JD9365_DSI_HD)
 		&jd9365_dsi_hd_drv,
 #endif
