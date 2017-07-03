@@ -996,7 +996,12 @@ static ssize_t onoff_store(struct device *dev, struct device_attribute *attr,con
 		}
 		else if(led == 'A' || led == 'a')
 		{
-			
+			#ifdef CONFIG_Y50_TOUCHSENSOR
+			if(sta == '1')
+			   aw2013_breath_all(1,1,1) ;
+			else 
+			  aw2013_breath_all(0,0,0) ;
+			#endif
 		}
 	
 		}
