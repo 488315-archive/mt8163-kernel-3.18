@@ -3082,6 +3082,8 @@ void do_chrdet_int_task(void)
 extern void aw2013_breath_all(int led0,int led1,int led2);
 extern unsigned char AW2013_i2c_read_reg(unsigned char regaddr) ;
 extern int danceflag;
+extern bool y50d_open_led_flag;
+
 static void charger_led(void )
 {
 	static kal_bool flag = KAL_FALSE;
@@ -3112,7 +3114,7 @@ static void charger_led(void )
 	{
 		reg_val=AW2013_i2c_read_reg(0x30);
 		 reg_val =reg_val&0x07;
-		 if(reg_val  == 0x07 && danceflag == false)
+		 if(reg_val  == 0x07 && danceflag == false && y50d_open_led_flag==false)
 			aw2013_breath_all(0,0,0) ;
 	}
 }

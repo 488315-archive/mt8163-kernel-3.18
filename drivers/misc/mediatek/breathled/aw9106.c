@@ -35,7 +35,7 @@ static char led_chest_freq = 'L';
 typedef unsigned short U16;
 typedef bool BOOL;
 typedef unsigned char U8;
-
+bool y50d_open_led_flag=false;
 #define BREATHNAME     "breath_led"  //breathled_ear
 static const struct i2c_device_id breathleds_i2c_id[] = {{"breath_led",0},{"breathled_chest",0},{}};   
 //static struct i2c_board_info __initdata breathleds_i2c_hw1={ I2C_BOARD_INFO("breathled_chest", (0xb2>>1))};
@@ -998,9 +998,15 @@ static ssize_t onoff_store(struct device *dev, struct device_attribute *attr,con
 		{
 			#ifdef CONFIG_Y50_TOUCHSENSOR
 			if(sta == '1')
+			{
 			   aw2013_breath_all(1,1,1) ;
+			   y50d_open_led_flag=true;
+			}
 			else 
+			{
 			  aw2013_breath_all(0,0,0) ;
+			  y50d_open_led_flag=false;
+			}
 			#endif
 		}
 	
