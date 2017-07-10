@@ -3100,7 +3100,7 @@ static void charger_led(void )
 		flag = KAL_FALSE;
 	}
 
-	if(BMT_status.charger_exist  == KAL_TRUE && flag == KAL_TRUE)
+	if((BMT_status.charger_exist  == KAL_TRUE && flag == KAL_TRUE) ||y50d_open_led_flag==true )
 	{
 	  reg_val=AW2013_i2c_read_reg(0x30);
 	  reg_val =reg_val&0x07;
