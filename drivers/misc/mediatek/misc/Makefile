@@ -1,3 +1,3 @@
-obj-y += misc.o
+obj-y += misc.o sensory.o
 
 
