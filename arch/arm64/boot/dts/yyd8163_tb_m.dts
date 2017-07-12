@@ -162,6 +162,7 @@
 	pinctrl-2 = <&flashlight_pins_hwen_low>;
 	status = "okay";
 };
+
 &adc_rst1 {
 	pinctrl-names = "default", "rst_high", "rst_low";
 	vmsdc-supply = <&mt6323_vmc_reg>;
@@ -379,6 +380,8 @@
 	adc_rst1_gpio126 = <&pio 126 0>;	
 	spk_f23_gpio46 = <&pio 46 0>;
 	led_v21_gpio26 = <&pio 26 0>;
+	iic_slc_gpio121 = <&pio 121 0>;
+	iic_sda_gpio122 = <&pio 122 0>;
 };
 
 &md32 {
@@ -689,7 +692,7 @@
 
 	flashlight_pins_hwen_high: hwen_high {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_117_CMDAT0__FUNC_GPIO117>;
+			pins = <MT8163_PIN_124_MSDC1_DAT1__FUNC_GPIO124>;
 			slew-rate = <1>;
 			output-high;
 		};
@@ -697,7 +700,7 @@
 
 	flashlight_pins_hwen_low: hwen_low {
 		pins_cmd_dat {
-			pins = <MT8163_PIN_117_CMDAT0__FUNC_GPIO117>;
+			pins = <MT8163_PIN_124_MSDC1_DAT1__FUNC_GPIO124>;
 			slew-rate = <1>;
 			output-low;
 		};
