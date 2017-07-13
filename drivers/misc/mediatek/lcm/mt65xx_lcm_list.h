@@ -242,7 +242,7 @@ extern LCM_DRIVER s6e3ha3_wqhd_2k_cmd_lcm_drv;
 extern LCM_DRIVER jd9365_dsi_hd_drv;
 extern LCM_DRIVER rm68200_dsi_lcm_drv;
 extern LCM_DRIVER jd_9365_cpt;
-
+extern LCM_DRIVER nt51021;
 #endif
 
 #ifdef BUILD_LK

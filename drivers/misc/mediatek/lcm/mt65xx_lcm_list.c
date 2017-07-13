@@ -28,6 +28,10 @@ LCM_DRIVER *lcm_driver_list[] = {
 		&jd_9365_cpt,
 #endif
 
+#if defined(NT51021)
+		&nt51021,
+#endif
+
 #if defined(JD9365_DSI_HD)
 		&jd9365_dsi_hd_drv,
 #endif
