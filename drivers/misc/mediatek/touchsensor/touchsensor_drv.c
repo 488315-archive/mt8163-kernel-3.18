@@ -36,8 +36,8 @@ static int timer_sta = 0;
 
 static unsigned int tp_irq;
 static struct pinctrl *pinctrl1;
-static struct pinctrl_state *tp_int8, *tp_int9, *tp_int10, *tp_int11, *tp_int16, *tp_int17;
-static unsigned int int8_gpio30,int9_gpio31,int10_gpio32,int11_gpio43,int16_gpio48,int17_gpio49;
+static struct pinctrl_state *tp_int8, *tp_int9, *tp_int10, *tp_int11, *tp_int16, *tp_int17,*tp_int18;
+static unsigned int int8_gpio30,int9_gpio31,int10_gpio32,int11_gpio43,int16_gpio48,int17_gpio49,int18_gpio50;
 
 #ifdef CONFIG_Y50_TOUCHSENSOR
 
@@ -99,6 +99,11 @@ static int tp_get_gpio_info(struct platform_device *pdev)
 		ret = PTR_ERR(tp_int17);
 		dev_err(&pdev->dev, "tp Cannot find touch pinctrl default %d!\n", ret);
 	}
+	tp_int18 = pinctrl_lookup_state(pinctrl1, "tp_int18");
+	if (IS_ERR(tp_int18)) {
+		ret = PTR_ERR(tp_int18);
+		dev_err(&pdev->dev, "tp Cannot find touch pinctrl default %d!\n", ret);
+	}
 	
 	pinctrl_select_state(pinctrl1, tp_int9);
 	pinctrl_select_state(pinctrl1, tp_int10);
@@ -106,6 +111,8 @@ static int tp_get_gpio_info(struct platform_device *pdev)
 	pinctrl_select_state(pinctrl1, tp_int8);
 	pinctrl_select_state(pinctrl1, tp_int16);
 	pinctrl_select_state(pinctrl1, tp_int17);
+	pinctrl_select_state(pinctrl1, tp_int18);
+	
 	
 	printk("tp_get_gpio_info-----\n");
 	return ret;
@@ -221,6 +228,21 @@ printk("yydd17-------------\n");
 
 	return IRQ_HANDLED;
 }
+
+static irqreturn_t tp_eint18_interrupt_handler(int irq, void *dev_id)
+{
+#ifdef CONFIG_Y50_TOUCHSENSOR
+	
+#else
+	
+#endif
+	
+	commit_status("sos");
+printk("yydd18-------------\n");
+
+	return IRQ_HANDLED;
+}
+
 extern bool audio_stop_flag;
 extern bool yyd_main_server;
 
@@ -241,6 +263,7 @@ enum hrtimer_restart double_touch_commit(struct hrtimer *timer)
 		commit_status("dance");		
 	}
 	timer_sta = 0;	
+
 	return HRTIMER_NORESTART;
 }
 
@@ -282,6 +305,8 @@ static int tp_probe(struct platform_device *dev)
 		int11_gpio43= of_get_named_gpio(node, "int11_gpio43", 0);
 		int16_gpio48= of_get_named_gpio(node, "int16_gpio48", 0);
 		int17_gpio49= of_get_named_gpio(node, "int17_gpio49", 0);
+		int18_gpio50= of_get_named_gpio(node, "int18_gpio50", 0);
+		//int124_gpio123= of_get_named_gpio(node, "int124_gpio123", 0);
 
 		gpio_request(int8_gpio30, "int8_gpio30");
 		gpio_request(int9_gpio31, "int9_gpio31");
@@ -289,6 +314,8 @@ static int tp_probe(struct platform_device *dev)
 		gpio_request(int11_gpio43, "int11_gpio43");
 		gpio_request(int16_gpio48, "int16_gpio48");
 		gpio_request(int17_gpio49, "int17_gpio49");
+		gpio_request(int18_gpio50, "int18_gpio50");
+		//gpio_request(int124_gpio123, "int124_gpio123");
 
 		gpio_set_debounce(int8_gpio30, debounce);
 		gpio_set_debounce(int9_gpio31, debounce);
@@ -296,6 +323,10 @@ static int tp_probe(struct platform_device *dev)
 		gpio_set_debounce(int11_gpio43, debounce);
 		gpio_set_debounce(int16_gpio48, debounce);
 		gpio_set_debounce(int17_gpio49, debounce);
+		gpio_set_debounce(int18_gpio50, debounce);
+
+		//gpio_set_debounce(int124_gpio123, 300);
+		//gpio_direction_input(int124_gpio123);
 		
 		tp_irq = irq_of_parse_and_map(node, 0);
 		printk("tp_probe_irq = %d\n!", tp_irq);	
@@ -326,6 +357,17 @@ static int tp_probe(struct platform_device *dev)
 		printk("tp_probe_irq = %d\n!", tp_irq);	
                   ret = request_irq(tp_irq, (irq_handler_t) tp_eint17_interrupt_handler, IRQF_TRIGGER_FALLING,
 					"touchsensor-eint", NULL);
+
+		 tp_irq = irq_of_parse_and_map(node, 6);
+		printk("tp_probe_irq = %d\n!", tp_irq);	
+                  ret = request_irq(tp_irq, (irq_handler_t) tp_eint18_interrupt_handler, IRQF_TRIGGER_RISING,
+					"touchsensor-eint", NULL);
+#if 0
+		 tp_irq = irq_of_parse_and_map(node, 7);
+		printk("tp_probe_irq = %d\n!", tp_irq);	
+                  ret = request_irq(tp_irq, (irq_handler_t) tp_eint124_interrupt_handler, IRQF_TRIGGER_FALLING,
+					"touchsensor-eint", NULL);
+#endif
 		if (ret > 0)
 			{
 				ret = -1;

@@ -107,21 +107,27 @@
 							 <10 IRQ_TYPE_EDGE_FALLING>,
 							 <11 IRQ_TYPE_EDGE_FALLING>,
 							 <16 IRQ_TYPE_EDGE_FALLING>,
-							 <17 IRQ_TYPE_EDGE_FALLING>;
+							 <17 IRQ_TYPE_EDGE_FALLING>,
+							 <18 IRQ_TYPE_EDGE_FALLING>;
+							
 	eint-debounce = <256>;	
-	pinctrl-names = "tp_int8", "tp_int9","tp_int10","tp_int11","tp_int16","tp_int17";
+	pinctrl-names = "tp_int8", "tp_int9","tp_int10","tp_int11","tp_int16","tp_int17","tp_int18";
 	pinctrl-0 = <&touchsensor_pins_tp_int8>;
 	pinctrl-1 = <&touchsensor_pins_tp_int9>;
 	pinctrl-2 = <&touchsensor_pins_tp_int10>;
 	pinctrl-3 = <&touchsensor_pins_tp_int11>;
 	pinctrl-4 = <&touchsensor_pins_tp_int16>;
 	pinctrl-5 = <&touchsensor_pins_tp_int17>;
+	pinctrl-6 = <&touchsensor_pins_tp_int18>;
+	
 	int8_gpio30 = <&pio 30 0>;
 	int9_gpio31 = <&pio 31 0>;
 	int10_gpio32 = <&pio 32 0>;
 	int11_gpio43 = <&pio 43 0>;
 	int16_gpio48 = <&pio 48 0>;
 	int17_gpio49 = <&pio 49 0>;
+	int18_gpio50 = <&pio 50 0>;
+	
 	status = "okay";
 };
 &audgpio {
@@ -686,6 +692,14 @@
 			bias-disable;
 		};
 	};
+	touchsensor_pins_tp_int18: eint@18 {
+		pins_cmd_dat {
+			pins = <MT8163_PIN_50_EINT18__FUNC_GPIO50>;
+			slew-rate = <0>;
+			bias-disable;
+		};
+	};
+		
 	
 	flashlight_pins_default: default {
 	};
