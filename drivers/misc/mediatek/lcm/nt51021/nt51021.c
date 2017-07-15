@@ -34,7 +34,7 @@
 /*static unsigned int GPIO_LCD_PWR_EN;*/
 
 static unsigned int GPIO_LCD_PWR_EN;
-static unsigned int GPIO_LCD_RST_EN;
+static unsigned int GPIO_LCD_RST_EN,GPIO_LCD_BACKLIGHT;
 
 static void lcm_get_gpio_infor(void)
 {
@@ -44,6 +44,7 @@ static void lcm_get_gpio_infor(void)
 
 	GPIO_LCD_PWR_EN = of_get_named_gpio(node, "lcm_power_gpio", 0);
 	GPIO_LCD_RST_EN = of_get_named_gpio(node, "lcm_reset_gpio", 0);
+	GPIO_LCD_BACKLIGHT= of_get_named_gpio(node, "lcm_backlight", 0);
 }
 
 static void lcm_set_gpio_output(unsigned int GPIO, unsigned int output)
@@ -739,7 +740,8 @@ static void dsp_lcm_init(void)
 
 static void lcm_suspend(void)
 {
-	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);	
+	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 0);
 	MDELAY(20);
  	   push_table(lcm_deep_sleep_mode_in_setting, sizeof(lcm_deep_sleep_mode_in_setting) / sizeof(struct LCM_setting_table), 1);
 }
@@ -748,6 +750,7 @@ static void lcm_suspend(void)
 static void lcm_resume(void)
 {
 	lcm_set_gpio_output(GPIO_LCD_RST_EN, 1);	
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 1);
 	MDELAY(20);
 	dsp_lcm_init();
 	MDELAY(10);		

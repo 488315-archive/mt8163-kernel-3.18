@@ -357,6 +357,7 @@
 &lcm {
 	lcm_power_gpio = <&pio 84 0>;
 	lcm_reset_gpio = <&pio 83 0>;
+	lcm_backlight = <&pio 117 0>;
 	reg-lcm-supply = <&mt6323_vgp3_reg>;
 };
 &misc {
