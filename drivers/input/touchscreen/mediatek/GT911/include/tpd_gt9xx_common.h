@@ -178,8 +178,8 @@ extern unsigned char gtp_default_FW_fl[];
 #if defined(CONFIG_GTP_CUSTOM_CFG)
 #define GTP_INT_TRIGGER  0	/* 0:Rising 1:Falling */
 #else
-#define GTP_MAX_HEIGHT    720
-#define GTP_MAX_WIDTH    1280
+#define GTP_MAX_HEIGHT    600//720
+#define GTP_MAX_WIDTH    1024//1280
 #define GTP_INT_TRIGGER  1
 #endif
 #define GTP_MAX_TOUCH    5

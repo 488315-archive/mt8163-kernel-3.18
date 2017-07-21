@@ -2514,7 +2514,8 @@ static int touch_event_handler(void *unused)
 				GTP_DEBUG(" %d)(%d, %d)[%d]",
 					  id, input_x, input_y, input_w);
 
-				tpd_down(1280-input_y ,input_x , input_w, id);
+				//tpd_down(1280-input_y ,input_x , input_w, id);
+				tpd_down(1024-input_y ,input_x , input_w, id);
 
 				//tpd_down(input_x, input_y, input_w, id);
 			}
