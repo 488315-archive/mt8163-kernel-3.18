@@ -109,8 +109,8 @@ MODULE_LICENSE("GPL");
 //  Local Constants
 // ---------------------------------------------------------------------------
 
-#define FRAME_WIDTH  										(600)
-#define FRAME_HEIGHT 										(1024)
+#define FRAME_WIDTH  									(600)
+#define FRAME_HEIGHT 									(1024)
 
 #define REGFLAG_DELAY             							0XFFE
 #define REGFLAG_END_OF_TABLE      							0xFFF   // END OF REGISTERS MARKER
@@ -694,7 +694,7 @@ static void lcm_get_params(LCM_PARAMS *params)
 		params->dbi.te_mode = LCM_DBI_TE_MODE_DISABLED;
 		params->dbi.te_edge_polarity = LCM_POLARITY_RISING;
 
-		params->dsi.mode   = SYNC_EVENT_VDO_MODE;
+		params->dsi.mode   =SYNC_PULSE_VDO_MODE;// SYNC_EVENT_VDO_MODE;
 	
 		// DSI
 		/* Command mode setting */
@@ -708,26 +708,27 @@ static void lcm_get_params(LCM_PARAMS *params)
 		// Highly depends on LCD driver capability.
 		// Not support in MT6573
 		params->dsi.packet_size=256;
+		params->dsi.cont_clock=1;
 
 		// Video mode setting		
 		params->dsi.intermediat_buffer_num = 2;
 
 		params->dsi.PS=LCM_PACKED_PS_24BIT_RGB888;
 
-		params->dsi.vertical_sync_active				= 2;
-		params->dsi.vertical_backporch					= 12;
-		params->dsi.vertical_frontporch					= 4;
+		params->dsi.vertical_sync_active				= 4;
+		params->dsi.vertical_backporch					= 12;//12;
+		params->dsi.vertical_frontporch					= 4;//4;
 		params->dsi.vertical_active_line				= FRAME_HEIGHT; 
 
-		params->dsi.horizontal_sync_active				= 8;
-		params->dsi.horizontal_backporch				= 64;
-		params->dsi.horizontal_frontporch				= 64;
+		params->dsi.horizontal_sync_active				= 4;
+		params->dsi.horizontal_backporch				= 160;//64;
+		params->dsi.horizontal_frontporch				= 24;//64;
 		params->dsi.horizontal_active_pixel				= FRAME_WIDTH;
 
 		// Bit rate calculation
 		//params->dsi.pll_div1=37;		// fref=26MHz, fvco=fref*(div1+1)	(div1=0~63, fvco=500MHZ~1GHz)
 		//params->dsi.pll_div2=1; 		// div2=0~15: fout=fvo/(2*div2)
-		params->dsi.PLL_CLOCK =100;
+		params->dsi.PLL_CLOCK =150;//100;
 }
 
 static unsigned int lcm_compare_id(void);
@@ -758,27 +759,8 @@ static void lcm_resume(void)
 }
 static unsigned int lcm_compare_id(void)
 {
-	unsigned int id = 0;
-	unsigned char buffer[3];
-	unsigned int array[16];
 	
-	SET_RESET_PIN(1);  //NOTE:should reset LCM firstly
-	SET_RESET_PIN(0);
-	MDELAY(6);
-	SET_RESET_PIN(1);
-	MDELAY(50);
-
-	array[0] = 0x00033700;// read id return two byte,version and id
-	dsi_set_cmdq(array, 1, 1);
-	read_reg_v2(0x04, buffer, 3);
-	id = buffer[0]; //we only need ID
-#if defined(BUILD_UBOOT)
-	//printf("\n\n\n\n[soso]%s, id1 = 0x%08x\n", __func__, id);
-#endif
-   //printf("\n\n[soso]%s, id0 = 0x%x  id1 = 0x%x  id2 = 0x%x\n", __func__, buffer[0],buffer[1],buffer[2]);
-
-   // return (id == 0x11)?1:0;
-   return id;
+   return 1;
 }
 
 
