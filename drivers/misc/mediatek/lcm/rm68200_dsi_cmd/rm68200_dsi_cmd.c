@@ -37,7 +37,7 @@
 //static struct i2c_client *client;
 
 static unsigned int GPIO_LCD_PWR_EN;
-static unsigned int GPIO_LCD_RST_EN;
+static unsigned int GPIO_LCD_RST_EN,GPIO_LCD_BACKLIGHT;
 
 static void lcm_get_gpio_infor(void)
 {
@@ -48,6 +48,7 @@ static void lcm_get_gpio_infor(void)
 
 	GPIO_LCD_PWR_EN = of_get_named_gpio(node, "lcm_power_gpio", 0);
 	GPIO_LCD_RST_EN = of_get_named_gpio(node, "lcm_reset_gpio", 0);
+	GPIO_LCD_BACKLIGHT= of_get_named_gpio(node, "lcm_backlight", 0);
 }
 
 static void lcm_set_gpio_output(unsigned int GPIO, unsigned int output)
@@ -861,6 +862,7 @@ extern bool yyd_audio_shutdown_flag;
 static void lcm_suspend(void)
 {	
 	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 0);
 	if(system_shutdown_flag==true)
 	{		
 		spk_ctl_code63xx(0);
@@ -874,6 +876,7 @@ static void lcm_suspend(void)
 static void lcm_resume(void)	
 {		
 	lcm_set_gpio_output(GPIO_LCD_RST_EN, 1);	
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 1);
 	MDELAY(20);
 	dsp_lcm_init();
 	MDELAY(10);	
