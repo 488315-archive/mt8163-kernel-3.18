@@ -117,7 +117,7 @@ DEFINE_MUTEX(i2c_access);
 
 struct i2c_client *i2c_client = NULL;
 struct task_struct *thread = NULL;
-int ICN_Log_level;
+//int ICN_Log_level;
 
 #ifdef CONFIG_FT_AUTO_UPGRADE_SUPPORT
 

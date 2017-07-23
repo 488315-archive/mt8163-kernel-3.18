@@ -36,7 +36,7 @@ extern struct hrtimer audio_stop_timer;
 extern int cw2015_read_version(void);
 //extern int cw2015_read_all_reg(char *buf);
 extern int g_cw2015_capacity ;
-extern int ICN_Log_level;
+//extern int ICN_Log_level;
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_EARLYSUSPEND
@@ -148,10 +148,10 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 	   }
 	   else if(pbuf[0] == 'D' )
 	   {	
-   		if(pbuf[1] == '1' )
-	   	 ICN_Log_level=1;
-		else
-		 ICN_Log_level=0;				
+   		//if(pbuf[1] == '1' )
+	   	// ICN_Log_level=1;
+		//else
+		// ICN_Log_level=0;				
 	   }
 	   
 	return len;
