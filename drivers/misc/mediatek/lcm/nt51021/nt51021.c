@@ -716,19 +716,19 @@ static void lcm_get_params(LCM_PARAMS *params)
 		params->dsi.PS=LCM_PACKED_PS_24BIT_RGB888;
 
 		params->dsi.vertical_sync_active				= 4;
-		params->dsi.vertical_backporch					= 12;//12;
-		params->dsi.vertical_frontporch					= 4;//4;
+		params->dsi.vertical_backporch					= 25;//12;
+		params->dsi.vertical_frontporch					= 35;//4;
 		params->dsi.vertical_active_line				= FRAME_HEIGHT; 
 
 		params->dsi.horizontal_sync_active				= 4;
-		params->dsi.horizontal_backporch				= 160;//64;
-		params->dsi.horizontal_frontporch				= 24;//64;
+		params->dsi.horizontal_backporch				= 60;//64;
+		params->dsi.horizontal_frontporch				= 80;//64;
 		params->dsi.horizontal_active_pixel				= FRAME_WIDTH;
 
 		// Bit rate calculation
 		//params->dsi.pll_div1=37;		// fref=26MHz, fvco=fref*(div1+1)	(div1=0~63, fvco=500MHZ~1GHz)
 		//params->dsi.pll_div2=1; 		// div2=0~15: fout=fvo/(2*div2)
-		params->dsi.PLL_CLOCK =150;//100;
+		params->dsi.PLL_CLOCK =165;//100;
 }
 
 static unsigned int lcm_compare_id(void);
