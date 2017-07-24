@@ -675,6 +675,21 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	/* set INT mode */
 
 	gpio_direction_input(tpd_int_gpio_number);
+#if 1
+  reset_proc:
+		if ((i2c_smbus_read_i2c_block_data(i2c_client, 0x00, 1, &data)) < 0) {
+			TPD_DMESG("I2C transfer error, line: %d\n", __LINE__);
+#ifdef TPD_RESET_ISSUE_WORKAROUND
+			if (reset_count < TPD_MAX_RESET_COUNT) {
+				reset_count++;
+				goto reset_proc;
+			}
+#endif
+			gpio_free(tpd_rst_gpio_number);
+			gpio_free(tpd_int_gpio_number);
+			return -1;
+		}
+#endif
 
 	tpd_irq_registration();
 	msleep(100);
@@ -689,6 +704,7 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 #endif				/* CONFIG_MTK_I2C_EXTENSION */
 #endif
 
+#if 0
 reset_proc:
 	if ((i2c_smbus_read_i2c_block_data(i2c_client, 0x00, 1, &data)) < 0) {
 		TPD_DMESG("I2C transfer error, line: %d\n", __LINE__);
@@ -702,6 +718,7 @@ reset_proc:
 		gpio_free(tpd_int_gpio_number);
 		return -1;
 	}
+#endif	
 	tpd_load_status = 1;
 #ifdef CONFIG_CUST_FTS_APK_DEBUG
 	ft_rw_iic_drv_init(client);
