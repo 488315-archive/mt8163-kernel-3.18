@@ -302,3 +302,21 @@ config MTK_BIF_SUPPORT
 	  smart battery.
 	  Set No to disable BIF feature of a
 	  smart battery.
+
+config YX20C_RONGSHIDA_PROFILE
+	bool "MediaTek PUMP EXPRESS"
+	default n
+	help
+	  fast charging, by using linear charger
+	  to achive better charging ability.
+	  Set Yes to support PE feature.
+	  Set No to disable PE.
+
+config Y50E_PROFILE
+	bool "MediaTek PUMP EXPRESS"
+	default n
+	help
+	  fast charging, by using linear charger
+	  to achive better charging ability.
+	  Set Yes to support PE feature.
+	  Set No to disable PE.
