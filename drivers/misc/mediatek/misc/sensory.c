@@ -213,7 +213,7 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
 		  IIC_NAck(dev);
 	  return receive;
   }
-
+#if 1
  static uint8_t i2c_read_reg_org(I2C_GPIO_T *dev, u8 Read_regaddr[],u8 Read_regaddr_length,u8 ret_buf[],u8 read_len)
   {
 	  uint8_t count = 0,i;
@@ -239,6 +239,24 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
 		  printk("%x,",ret_buf[count]);
 		  printk("\n");
 #endif		
+		  return count;
+  
+  }
+ #endif
+  static uint8_t i2c_read_buf(I2C_GPIO_T *dev,u8 ret_buf[],u8 read_len)
+  {
+	  uint8_t count = 0;
+		  
+		  i2c_start(dev);
+		  i2c_transfer_byte(dev, dev->addr+1);
+		  
+			for(count=0;count<read_len;count++)
+			{		   
+			   if(count !=(read_len-1))ret_buf[count]=i2c_read_byte(dev,KAL_TRUE);
+				  else	ret_buf[count]=i2c_read_byte(dev,KAL_FALSE);		  
+			}	  
+		  i2c_stop(dev);
+		
 		  return count;
   
   }
@@ -281,6 +299,8 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
 
  static int misc_release (struct inode *node, struct file *file)
  {
+	 gpio_free(IIC_DEV->scl);
+	 gpio_free(IIC_DEV->sda);
 	 printk("misc_release !\n");
 	 return 0;	
  }
@@ -295,13 +315,13 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
  
 static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len, loff_t * offset)
 {
-	 char pbuf[50];	
+	 char pbuf[len];	
 	 	 
 	   if(copy_from_user(pbuf, buf,len))
 	   {
 		   return	 -EFAULT;  
 	   }	  
-	    printk("misc_write111111%c,%c====%s\n",pbuf[0],pbuf[1],pbuf);
+	  //  printk("misc_write111111%c,%c====%s\n",pbuf[0],pbuf[1],pbuf);
 
 	   i2c_write_buf(IIC_DEV,pbuf,len);
 		  
@@ -310,10 +330,8 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 
 static ssize_t misc_read(struct file *pfile, char __user *to, size_t len, loff_t *offset)
 {
-	 char strbuf[len],ret,reg;
-	 reg=0x66;
-	i2c_read_reg_org(IIC_DEV,&reg,1,strbuf,len);
-	//   printk("misc_read---------s\n");
+	 char strbuf[len],ret;
+	i2c_read_buf(IIC_DEV,strbuf,len);	
 	ret=copy_to_user(to, strbuf, len);
 	return 0;
 }
