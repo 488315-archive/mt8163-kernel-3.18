@@ -1797,6 +1797,7 @@ static void _mtkfb_draw_block(unsigned long addr, unsigned int x, unsigned int y
 #endif
 char *mtkfb_find_lcm_driver(void)
 {
+	printk("%s, %s\n", __func__, mtkfb_lcm_name);
 
 #ifdef CONFIG_OF
 	if (1 == _parse_tag_videolfb()) {
@@ -1823,7 +1824,7 @@ char *mtkfb_find_lcm_driver(void)
 	strncpy((char *)mtkfb_lcm_name, (const char *)p, (int)(q - p));
 	mtkfb_lcm_name[q - p + 1] = '\0';
 #endif
-	pr_debug("%s, %s\n", __func__, mtkfb_lcm_name);
+	printk("%s, %s\n", __func__, mtkfb_lcm_name);
 	return mtkfb_lcm_name;
 }
 
@@ -2214,8 +2215,11 @@ static int mtkfb_probe(struct device *dev)
 	primary_display_set_frame_buffer_address((unsigned long)fbdev->fb_va_base, fb_pa);
 
 	/* mtkfb should parse lcm name from kernel boot command line */
+	if(is_videofb_parse_done)
+	primary_display_init(mtkfb_lcm_name, lcd_fps);
+	else 
 	primary_display_init(mtkfb_find_lcm_driver(), lcd_fps);
-
+		
 	init_state++;		/* 1 */
 	MTK_FB_XRES = primary_display_get_width();
 	MTK_FB_YRES = primary_display_get_height();
