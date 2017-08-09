@@ -98,10 +98,15 @@ static ssize_t motor_write(struct file *pfile, const char __user *from, size_t l
 					*/
 					motor_gpio_ctl(motor_boot,1);
 					motor_gpio_ctl(motor_rst,1);
+					motor_gpio_ctl(motor_power,1);		
 					mdelay(10);
+
+					motor_gpio_ctl(motor_rst,0);
 					motor_gpio_ctl(motor_power,0);
-					mdelay(10);
+					mdelay(100);
 					motor_gpio_ctl(motor_power,1);
+					mdelay(200);	
+					motor_gpio_ctl(motor_rst,1);
 					printk("daviekuo pull up STM32 to update !\n");
 					break;
 				case '0':
