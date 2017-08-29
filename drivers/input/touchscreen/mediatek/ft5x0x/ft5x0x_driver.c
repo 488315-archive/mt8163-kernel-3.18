@@ -109,7 +109,7 @@ struct Touch_IPI_Packet {
 
 static bool tpd_scp_doze_en;
 /*static bool tpd_scp_doze_en = true;*/
-DEFINE_MUTEX(i2c_access);
+//DEFINE_MUTEX(i2c_access);
 #endif
 
 #define TPD_SUPPORT_POINTS	5
@@ -144,7 +144,7 @@ static int p_point_num = 0;*/
 
 unsigned int tpd_rst_gpio_number = 0;
 unsigned int tpd_int_gpio_number = 0;
-unsigned int touch_irq = 0;
+static unsigned int touch_irq = 0;
 #define TPD_OK 0
 
 /* Register define */
@@ -643,6 +643,8 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	int reset_count = 0;
 	char data;
 
+	client->addr=0x38;
+
 	i2c_client = client;
 
 	of_get_ft5x0x_platform_data(&client->dev);
@@ -665,16 +667,14 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	gpio_direction_output(tpd_rst_gpio_number, 1);
 	msleep(50);
 
-	TPD_DMESG("mtk_tpd: tpd_probe ft5x0x\n");
+	TPD_DMESG("mtk_tpd: tpd_probe ft5x0x===%x\n",i2c_client->addr);
 
 
 	retval = regulator_enable(tpd->reg);
 	if (retval != 0)
 		TPD_DMESG("Failed to enable reg-vgp6: %d\n", retval);
 
-	/* set INT mode */
-
-	gpio_direction_input(tpd_int_gpio_number);
+	
 #if 1
   reset_proc:
 		if ((i2c_smbus_read_i2c_block_data(i2c_client, 0x00, 1, &data)) < 0) {
@@ -690,6 +690,10 @@ static int tpd_probe(struct i2c_client *client, const struct i2c_device_id *id)
 			return -1;
 		}
 #endif
+
+	/* set INT mode */
+	
+		gpio_direction_input(tpd_int_gpio_number);
 
 	tpd_irq_registration();
 	msleep(100);
@@ -806,10 +810,12 @@ static int tpd_local_init(void)
 	TPD_DMESG("Focaltech FT5x0x I2C Touchscreen Driver...\n");
 	tpd->reg = regulator_get(tpd->tpd_dev, "vtouch");
 	retval = regulator_set_voltage(tpd->reg, 2800000, 2800000);
+	
 	if (retval != 0) {
 		TPD_DMESG("Failed to set reg-vgp6 voltage: %d\n", retval);
 		return -1;
 	}
+	
 	if (i2c_add_driver(&tpd_i2c_driver) != 0) {
 		TPD_DMESG("unable to add i2c driver.\n");
 		return -1;
@@ -819,6 +825,7 @@ static int tpd_local_init(void)
 		tpd_button_setting(tpd_dts_data.tpd_key_num, tpd_dts_data.tpd_key_local,
 		tpd_dts_data.tpd_key_dim_local);
 	}
+	
 
 #if (defined(TPD_WARP_START) && defined(TPD_WARP_END))
 	TPD_DO_WARP = 1;

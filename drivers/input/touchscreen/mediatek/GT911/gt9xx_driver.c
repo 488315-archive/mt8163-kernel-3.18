@@ -32,6 +32,9 @@ int tpd_halt = 0;
 static int tpd_eint_mode = 1;
 static struct task_struct *thread;
 static int tpd_polling_time = 50;
+extern unsigned int DISP_GetScreenHeight(void);
+extern unsigned int DISP_GetScreenWidth(void);
+static bool LCM_WIDTH_1024=0;
 
 
 static DECLARE_WAIT_QUEUE_HEAD(waiter);
@@ -1256,7 +1259,7 @@ reset_proc:
 		GTP_DEBUG("regulator_set_voltage() failed!\n");
 	ret = regulator_enable(tpd->reg);	/* enable regulator */
 	if (ret)
-		GTP_DEBUG("regulator_enable() failed!\n");
+	   GTP_DEBUG("regulator_enable() failed!\n");
 #else
 	hwPowerOn(MT65XX_POWER_LDO_VGP2, VOL_2800, "TP");
 #endif
@@ -1748,6 +1751,7 @@ static s32 tpd_i2c_probe(struct i2c_client *client, const struct i2c_device_id *
 
 	tpd_load_status = 1;
 
+        if(DISP_GetScreenHeight()==1024)LCM_WIDTH_1024=1;
 	return 0;
     
 }
@@ -2084,6 +2088,7 @@ static void tpd_calibrate_driver(int *x, int *y)
 	*x = tx;
 }
 #endif
+
 static int touch_event_handler(void *unused)
 {
 	struct sched_param param = {.sched_priority = RTPM_PRIO_TPD };
@@ -2514,7 +2519,9 @@ static int touch_event_handler(void *unused)
 				GTP_DEBUG(" %d)(%d, %d)[%d]",
 					  id, input_x, input_y, input_w);
 
-				//tpd_down(1280-input_y ,input_x , input_w, id);
+				if(LCM_WIDTH_1024==0)
+				tpd_down(input_x ,input_y , input_w, id);
+				else
 				tpd_down(1024-input_y ,input_x , input_w, id);
 
 				//tpd_down(input_x, input_y, input_w, id);
