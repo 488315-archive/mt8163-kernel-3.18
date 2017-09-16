@@ -85,7 +85,7 @@ static AudioDigtalI2S *mAudioDigitalI2S = NULL;
 static bool mCaptureUseSram = false;
 static DEFINE_SPINLOCK(auddrv_ULInCtl_lock);
 #define Samp_96 96000
-static unsigned int GPIO_RST_EN;
+//static unsigned int GPIO_RST_EN;
 static unsigned int GPIO_89;
 static unsigned int GPIO_5;
 static unsigned int GPIO_42;
@@ -721,7 +721,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		{
 			if(substream->runtime->rate == Samp_96)
 			{
-				fpga_set_gpio_output(GPIO_RST_EN,1);
+				//fpga_set_gpio_output(GPIO_RST_EN,1);
 			}
 			
 		}
@@ -734,7 +734,7 @@ static int mtk_capture_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 		{
 			if(substream->runtime->rate == Samp_96)
 			{
-			fpga_set_gpio_output(GPIO_RST_EN,0);
+			//fpga_set_gpio_output(GPIO_RST_EN,0);
 			}
 		}
 		mic_run_flag=false;
@@ -1021,7 +1021,7 @@ static void fpga_get_gpio_infor(void)
 {
 	static struct device_node *node;
 	node = of_find_compatible_node(NULL, NULL, "mediatek,fpga");
-	GPIO_RST_EN = of_get_named_gpio(node, "rst_d3_gpio124", 0);
+	//GPIO_RST_EN = of_get_named_gpio(node, "rst_d3_gpio124", 0);
 	GPIO_89 = of_get_named_gpio(node, "misc_u5_gpio89", 0);
 	GPIO_5 = of_get_named_gpio(node, "misc_l19_gpio5", 0);
 	GPIO_42 = of_get_named_gpio(node, "misc_y18_gpio42", 0);
@@ -1039,12 +1039,12 @@ static int fpga_probe(struct device *dev)
 {	
 	printk("lifei++11++++fpga_probe\n");
 	fpga_get_gpio_infor();
-	gpio_request(GPIO_RST_EN, "GPIO_RST_EN");
+	//gpio_request(GPIO_RST_EN, "GPIO_RST_EN");
 	gpio_request(GPIO_42, "GPIO_42");
 	gpio_request(GPIO_89, "GPIO_89");
 	gpio_request(GPIO_5, "GPIO_5");
 	
-	fpga_set_gpio_output(GPIO_RST_EN,0);
+	//fpga_set_gpio_output(GPIO_RST_EN,0);
 	fpga_set_gpio_output(GPIO_89,1);
 	fpga_set_gpio_output(GPIO_5,1);
 	fpga_set_gpio_output(GPIO_42,0);
