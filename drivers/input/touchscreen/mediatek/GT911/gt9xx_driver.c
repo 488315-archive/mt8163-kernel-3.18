@@ -2519,10 +2519,14 @@ static int touch_event_handler(void *unused)
 				GTP_DEBUG(" %d)(%d, %d)[%d]",
 					  id, input_x, input_y, input_w);
 
+		#ifdef CONFIG_Y20D_1280TP
+		tpd_down(1280-input_y ,input_x , input_w, id);
+		#else
 				if(LCM_WIDTH_1024==0)
 				tpd_down(input_x ,input_y , input_w, id);
 				else
 				tpd_down(1024-input_y ,input_x , input_w, id);
+		#endif		
 
 				//tpd_down(input_x, input_y, input_w, id);
 			}
