@@ -198,7 +198,13 @@ config Y50_TOUCHSENSOR
 	default n
 	help
 	  Support y50 touchsensor or not
-	  
+	
+config Y20D_PRODUCT
+	bool "Y20D_PRODUCT"
+	default n
+	help
+	 Support y20d touchsensor or not
+	     
 config MTK_Y50B_IR
 	bool "MTK_Y50B_IR"
 	default n
