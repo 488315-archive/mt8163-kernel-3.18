@@ -389,6 +389,9 @@
 	led_v21_gpio26 = <&pio 26 0>;
 	iic_slc_gpio121 = <&pio 122 0>;
 	iic_sda_gpio122 = <&pio 121 0>;
+/*	iic_slc_gpio121 = <&pio 122 0>;*/
+	iic_sda_gpio123 = <&pio 123 0>;
+	iic_sda1_gpio124 = <&pio 124 0>;
 };
 
 &md32 {
