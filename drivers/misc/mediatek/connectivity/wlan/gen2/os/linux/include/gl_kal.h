@@ -927,7 +927,7 @@ BOOLEAN kalIndicateAgpsNotify(P_ADAPTER_T prAdapter, UINT_8 cmd, PUINT_8 data, U
 
 #define kalGetTimeTick()                            jiffies_to_msecs(jiffies)
 
-#define kalPrint                                    pr_debug
+#define kalPrint                                   printk// pr_debug
 
 #if !DBG
 #define AIS_ERROR_LOGFUNC(_Fmt...)

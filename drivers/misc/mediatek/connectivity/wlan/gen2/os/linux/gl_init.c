@@ -3395,7 +3395,7 @@ static int initWlan(void)
 #else
 	/* Initial debug level is D1 */
 	for (i = 0; i < DBG_MODULE_NUM; i++)
-		aucDebugModule[i] = DBG_CLASS_ERROR | DBG_CLASS_WARN | DBG_CLASS_INFO | DBG_CLASS_STATE;
+		aucDebugModule[i] =DBG_CLASS_MASK;// DBG_CLASS_ERROR | DBG_CLASS_WARN | DBG_CLASS_INFO | DBG_CLASS_STATE;
 #endif /* DBG */
 	DBGLOG(INIT, INFO, "initWlan\n");
 
