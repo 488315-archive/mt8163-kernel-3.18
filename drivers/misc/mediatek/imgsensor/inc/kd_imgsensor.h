@@ -191,7 +191,6 @@ NSFeature :  : RAWSensorInfo < _id >  :  : getFlickerPara \
 #define HI251_SENSOR_ID                         0x0084
 #define HI191MIPI_SENSOR_ID                     0x0191
 #define HIVICF_SENSOR_ID                        0x0081
-#define HI556_SENSOR_ID                         0x556
 /*MT*/
 #define MT9D011_SENSOR_ID                       0x1511
 #define MT9D111_SENSOR_ID                       0x1511
@@ -349,7 +348,6 @@ NSFeature :  : RAWSensorInfo < _id >  :  : getFlickerPara \
 #define SENSOR_DRVNAME_HI707_YUV                "hi707yuv"
 #define SENSOR_DRVNAME_HI704_YUV                "hi704yuv"
 #define SENSOR_DRVNAME_HI551_MIPI_RAW           "hi551mipiraw"
-#define SENSOR_DRVNAME_HI556_MIPI_RAW           "hi556mipiraw"
 #define SENSOR_DRVNAME_HI545_MIPI_RAW           "hi545mipiraw"
 #define SENSOR_DRVNAME_HI542_RAW                "hi542raw"
 #define SENSOR_DRVNAME_HI542MIPI_RAW            "hi542mipiraw"
