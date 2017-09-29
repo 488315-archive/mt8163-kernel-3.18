@@ -16,6 +16,7 @@
 #include <linux/seq_file.h>
 #include "xlog_internal.h"
 
+
 u32 *xLogMem;
 u32 xlog_global_tag_level = XLOGF_DEFAULT_LEVEL;
 
