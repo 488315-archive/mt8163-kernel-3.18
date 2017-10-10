@@ -361,6 +361,8 @@ static void AW9523_init(void)
 	 AW9106_i2c_write_reg(0x13,0x00);
 
 }
+#define DELAY 50
+
  static void AW9523_breath_front_loop(int8_t color)
   {
 	  int i=0,reg_base=0x20;
@@ -397,13 +399,14 @@ static void AW9523_init(void)
 	}
 	else if(color == 0x03)
 	{
+		
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x28,0x0);
 		AW9106_i2c_write_reg(0x20,0xff);
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x24,0x0);
 		AW9106_i2c_write_reg(0x20,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x29,0x0);
@@ -411,7 +414,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x23,0x0);
 		 AW9106_i2c_write_reg(0x2b,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x2a,0x0);
@@ -419,7 +422,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		AW9106_i2c_write_reg(0x22,0x0);
 		AW9106_i2c_write_reg(0x2a,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x2b,0x0);
@@ -427,7 +430,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x21,0x0);
 		AW9106_i2c_write_reg(0x29,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 //////////////////////////
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x20,0x0);
@@ -435,7 +438,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x20,0x0);
 		AW9106_i2c_write_reg(0x28,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x21,0x0);
@@ -443,7 +446,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x2b,0x0);
 		AW9106_i2c_write_reg(0x27,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x22,0x0);
@@ -451,14 +454,14 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x2a,0x0);
 		AW9106_i2c_write_reg(0x26,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x23,0x0);
 		AW9106_i2c_write_reg(0x27,0xff);
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x29,0x0);
 		AW9106_i2c_write_reg(0x25,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 /////////////////////////////////////////
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x24,0x0);
@@ -466,7 +469,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x28,0x0);
 		AW9106_i2c_write_reg(0x24,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x25,0x0);
@@ -474,7 +477,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;		 
 		AW9106_i2c_write_reg(0x27,0x0);
 		AW9106_i2c_write_reg(0x23,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x26,0x0);
@@ -482,7 +485,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x26,0x0);
 		AW9106_i2c_write_reg(0x22,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x27,0x0);
@@ -490,7 +493,7 @@ static void AW9523_init(void)
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x25,0x0);
 		AW9106_i2c_write_reg(0x21,0xff);
-		mDELAY(100);
+		mDELAY(DELAY);
 #if 0
 ///////////////////////////////////////
 			IIC_DEV->sda=IICSDA;
