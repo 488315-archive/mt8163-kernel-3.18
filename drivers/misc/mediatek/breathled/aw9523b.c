@@ -716,10 +716,19 @@ static int aw9523b_probe(struct platform_device *dev)
 	printk("aw9523b_probe====");
 	return 0;
 }
+static void led_shutdown(struct platform_device * dev)
+{
+		IIC_DEV->sda=IICSDA;
+		 AW9106_SoftReset();
+		 	
+		 IIC_DEV->sda=IICSDA1;
+		 AW9106_SoftReset();
+printk("led_shutdown--------\n");
+}
 
 static struct platform_driver aw_platform_driver = {
 	.probe = aw9523b_probe,
-	
+	.shutdown    = led_shutdown,
 	.driver = {
 		   .name = "aw9523b",
 		   .owner = THIS_MODULE,
