@@ -29,6 +29,8 @@
 #include <linux/of_gpio.h>
 #endif
 
+#include <mt-plat/mt_boot.h>
+
 /*----------------------------------------------------------------------------*/
 #define DEV_NAME   "aw9523b"
 static struct cdev *misc_cdev;
@@ -711,7 +713,8 @@ static int aw9523b_probe(struct platform_device *dev)
 	i2c_init_gpio(IIC_DEV);
 	IIC_DEV->addr=AW_ADDR1;
 
-	paoma_thread = kthread_run(paoma_thread_func, NULL, "paoma_thread");
+	if(NORMAL_BOOT == get_boot_mode())
+		paoma_thread = kthread_run(paoma_thread_func, NULL, "paoma_thread");
 	
 	printk("aw9523b_probe====");
 	return 0;
