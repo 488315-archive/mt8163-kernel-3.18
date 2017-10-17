@@ -340,11 +340,11 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
 	else
 		Breath_cnt2=0;
 }
-
+//static int tt=0;
  enum hrtimer_restart led_time_hrtimer_func(struct hrtimer *timer)
 {
 	AW9523_breath_mode(1);
-	hrtimer_forward_now(&led_time, ktime_set(0, 300*1000000));	//800ms
+	hrtimer_forward_now(&led_time, ktime_set(0, 50*1000000));	//800ms
 	
 	return HRTIMER_RESTART;
 }
@@ -396,7 +396,7 @@ static void AW9523_init(void)
 	{
 		  hrtimer_init(&led_time, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		led_time.function = led_time_hrtimer_func;
-		hrtimer_start(&led_time, ktime_set(0, 300*1000000), HRTIMER_MODE_REL);
+		hrtimer_start(&led_time, ktime_set(0, 50*1000000), HRTIMER_MODE_REL);
 		
 	}
 	else if(color == 0x03)
@@ -623,7 +623,9 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 		else if(pbuf[2]=='4')
 		{
 			breath_flag=1;
+			//tt=simple_strtoul(&pbuf[4],NULL,10);
 			AW9523_breath_front_loop(4);//breath mode
+			printk("misc_write	00buf=%d\n",tt);
 
 		}
 		
