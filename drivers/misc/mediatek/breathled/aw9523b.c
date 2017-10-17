@@ -625,7 +625,7 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 			breath_flag=1;
 			//tt=simple_strtoul(&pbuf[4],NULL,10);
 			AW9523_breath_front_loop(4);//breath mode
-			printk("misc_write	00buf=%d\n",tt);
+			//printk("misc_write	00buf=%d\n",tt);
 
 		}
 		
