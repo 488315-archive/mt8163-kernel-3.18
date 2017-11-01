@@ -250,13 +250,13 @@
 	pinctrl-0 = <&i2c2_pins_a>;
 	md32,semaphore = <MD32_SEMAPHORE_I2C2>;
 	status = "okay";
-
+/*
 	msensor@0c {
 		compatible = "mediatek,msensor";
 		reg = <0x0c>;
 		rst-gpio = <&pio 52 0>;
 	};
-
+*/
 	gsensor@68 {
 		compatible = "mediatek,gsensor";
 		reg = <0x68>;
@@ -387,11 +387,11 @@
 	adc_rst1_gpio126 = <&pio 126 0>;	
 	spk_f23_gpio46 = <&pio 46 0>;
 	led_v21_gpio26 = <&pio 26 0>;
-	iic_slc_gpio121 = <&pio 122 0>;
+	iic_slc_gpio52 = <&pio 52 0>;
 	iic_sda_gpio122 = <&pio 121 0>;
 /*	iic_slc_gpio121 = <&pio 122 0>;*/
-	iic_sda_gpio123 = <&pio 123 0>;
-	iic_sda1_gpio124 = <&pio 124 0>;
+	iic_sda_gpio29 = <&pio 29 0>;
+	iic_sda1_gpio13 = <&pio 13 0>;
 };
 
 &md32 {

@@ -69,11 +69,12 @@ static I2C_GPIO_T IIC_GPIO;
  static void find_gpio(I2C_GPIO_T *dev)
  {
 	 struct device_node *node;
-		 
+	unsigned int led_en;
+	
 	 node = of_find_compatible_node(NULL, NULL, "mediatek,adc_rst");
-	IICSCL  = of_get_named_gpio(node, "iic_slc_gpio121", 0);
-	IICSDA   = of_get_named_gpio(node, "iic_sda_gpio123", 0);
-	 IICSDA1  = of_get_named_gpio(node, "iic_sda1_gpio124", 0);
+	IICSCL  = of_get_named_gpio(node, "iic_slc_gpio52", 0);
+	IICSDA   = of_get_named_gpio(node, "iic_sda_gpio29", 0);
+	 IICSDA1  = of_get_named_gpio(node, "iic_sda1_gpio13", 0);
 	 gpio_request(IICSDA, "IICSDA");
 	 gpio_request(IICSCL, "IICSCL");
 	 gpio_request(IICSDA1, "IICSDA1");
@@ -81,7 +82,11 @@ static I2C_GPIO_T IIC_GPIO;
 	 dev->scl=IICSCL;
 	 dev->sda=IICSDA;
 	 dev->sda1= IICSDA1;
-	
+
+		  led_en = of_get_named_gpio(node, "led_v21_gpio26", 0);
+		  gpio_request(led_en, "led_en");
+		  gpio_direction_output(led_en, 1);
+		   gpio_set_value(led_en, 1);
  }
 
 static void delay_nop_1us( int wTime)
