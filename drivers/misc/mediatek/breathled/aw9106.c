@@ -1224,8 +1224,8 @@ static struct file_operations breathleds_fops = {
 static int breathleds_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
 	int ret;
-	//unsigned int led_en;
-	//struct device_node *node;
+	unsigned int led_en;
+	struct device_node *node;
 	
 	   printk("[%s] breathleds_i2c_probe\n", id->name);
 	
@@ -1233,11 +1233,11 @@ static int breathleds_i2c_probe(struct i2c_client *client, const struct i2c_devi
 	
 		breathleds_i2c_client = client;
 			breathleds_i2c_client->addr = 0xb6>>1;	   
-		 //  node = of_find_compatible_node(NULL, NULL, "mediatek,adc_rst");
-		 //  led_en = of_get_named_gpio(node, "led_v21_gpio26", 0);
-		//  gpio_request(led_en, "led_en");
-		//  gpio_direction_output(led_en, 1);
-		//   gpio_set_value(led_en, 1);
+		   node = of_find_compatible_node(NULL, NULL, "mediatek,adc_rst");
+		   led_en = of_get_named_gpio(node, "led_v21_gpio26", 0);
+		  gpio_request(led_en, "led_en");
+		  gpio_direction_output(led_en, 1);
+		   gpio_set_value(led_en, 1);
 
 		AW9106_SoftReset();
 		ret = alloc_chrdev_region(&b_dev, 0, 1, DEV_NAME);
