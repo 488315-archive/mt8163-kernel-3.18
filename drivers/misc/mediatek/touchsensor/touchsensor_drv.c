@@ -121,7 +121,7 @@ static irqreturn_t tp_eint8_interrupt_handler(int irq, void *dev_id)
 {
 	
 #ifdef CONFIG_Y50_TOUCHSENSOR	
-		commit_status("back");
+	//	commit_status("back");
 #else
 	commit_status("t_head");//du zi
 #endif	
@@ -219,7 +219,7 @@ printk("yydd16-----------\n");
 static irqreturn_t tp_eint17_interrupt_handler(int irq, void *dev_id)
 {
 #ifdef CONFIG_Y50_TOUCHSENSOR
-	
+	commit_status("back");
 #else
 	
 #endif
