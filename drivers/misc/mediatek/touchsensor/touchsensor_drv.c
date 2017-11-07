@@ -29,7 +29,7 @@
 
 static struct switch_dev touchsensor_dev;
 static struct input_dev *touchsensor_input_dev;
-static struct hrtimer dance_timer,touch_time;
+static struct hrtimer dance_timer,touch_time,sos_timer;
 static unsigned long left_time=0,right_time=0;
 struct hrtimer audio_stop_timer;
 static int timer_sta = 0;
@@ -236,8 +236,10 @@ static irqreturn_t tp_eint18_interrupt_handler(int irq, void *dev_id)
 #else
 	
 #endif
-	
-	commit_status("sos");
+
+	 hrtimer_forward_now(&sos_timer, ktime_set(0, 20*1000000));
+	  hrtimer_start(&sos_timer, ktime_set(0, 20*1000000), HRTIMER_MODE_REL); 	
+	//commit_status("sos");
 printk("yydd18-------------\n");
 
 	return IRQ_HANDLED;
@@ -264,6 +266,34 @@ enum hrtimer_restart double_touch_commit(struct hrtimer *timer)
 	}
 	timer_sta = 0;	
 
+	return HRTIMER_NORESTART;
+}
+enum hrtimer_restart sos_commit(struct hrtimer *timer)
+{
+	int status;
+	static unsigned int num=0,flag=0;
+	status=gpio_get_value(int18_gpio50)?1:0 ;
+	
+	num++;
+	if(num >=150 && status ==1 && flag ==0)//3/s
+	{
+		flag=1;
+		commit_status("sos_long");
+	}
+	else if(num <150 && status ==0 )
+	{		
+		commit_status("sos");
+	}
+	if(status== 1)
+	{
+	   hrtimer_forward_now(&sos_timer, ktime_set(0, 20*1000000));
+	  hrtimer_start(&sos_timer, ktime_set(0, 20*1000000), HRTIMER_MODE_REL); 		
+	}
+	else
+	{
+		num=0;
+		flag=0;
+	}
 	return HRTIMER_NORESTART;
 }
 
@@ -410,6 +440,12 @@ static int tp_probe(struct platform_device *dev)
 		hrtimer_init(&touch_time, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		touch_time.function = double_touch_commit;
 //--------------------------------------------
+
+	//----------------------dual touch---------------
+			hrtimer_init(&sos_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+			sos_timer.function = sos_commit;
+	//--------------------------------------------
+
 	printk("tp_probe====\n");
 	return 0;
 }
