@@ -13,8 +13,8 @@
  *     CMOS sensor header file
  *
  ****************************************************************************/
-#define IMAGE_NORMAL_MIRROR 
-//#define IMAGE_H_MIRROR 
+//#define IMAGE_NORMAL_MIRROR 
+#define IMAGE_H_MIRROR 
 //#define IMAGE_V_MIRROR 
 //#define IMAGE_HV_MIRROR 
 
