@@ -21,6 +21,7 @@
 #include <linux/of_gpio.h>
 #include <linux/switch.h>
 #include <linux/input.h>
+#include <linux/workqueue.h>
 
 
 #define TOUCH  1
@@ -34,11 +35,14 @@ static unsigned long left_time=0,right_time=0;
 struct hrtimer audio_stop_timer;
 static int timer_sta = 0;
 
+static struct work_struct work;
+static struct workqueue_struct *wq;
+
 static unsigned int tp_irq;
 static struct pinctrl *pinctrl1;
 static struct pinctrl_state *tp_int8, *tp_int9, *tp_int10, *tp_int11, *tp_int16, *tp_int17,*tp_int18;
 static unsigned int int8_gpio30,int9_gpio31,int10_gpio32,int11_gpio43,int16_gpio48,int17_gpio49,int18_gpio50;
-
+static unsigned char touch_event=0;
 #ifdef CONFIG_Y50_TOUCHSENSOR
 
 #else
@@ -56,6 +60,54 @@ void commit_status(char *switch_name)
 		touchsensor_dev.name = TP_NAME;
 		
 		printk("touchsensor -------%s----\n",switch_name);	
+}
+
+static void touch_mcu_worker(struct work_struct *work)
+{	
+		if(touch_event=='a')
+		{
+			commit_status("t_head");//du zi
+		}
+		else if(touch_event=='b')
+			{
+			commit_status("head");
+		}
+		else if(touch_event=='c')
+			{
+			commit_status("yyd4");//cntoen
+		}
+		else if(touch_event=='d')
+			{
+			commit_status("left");
+		}
+		else if(touch_event=='f')
+			{
+			commit_status("yyd6");	 //volup
+			
+			input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,1);
+			input_sync(touchsensor_input_dev);
+			input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,0);
+			input_sync(touchsensor_input_dev);
+		}
+		else if(touch_event=='h')
+			{
+			commit_status("right");
+		}
+		else if(touch_event=='i')
+			{
+			commit_status("yyd5");//voldown
+		
+			input_report_key(touchsensor_input_dev, KEY_VOLUMEDOWN,1);
+			input_sync(touchsensor_input_dev);
+			input_report_key(touchsensor_input_dev, KEY_VOLUMEDOWN,0);
+			input_sync(touchsensor_input_dev);				
+		}
+		else if(touch_event=='j')
+			{
+			commit_status("back");
+		}
+
+		touch_event=0;
 }
 
 static int tp_get_gpio_info(struct platform_device *pdev)
@@ -121,11 +173,17 @@ static irqreturn_t tp_eint8_interrupt_handler(int irq, void *dev_id)
 {
 	
 #ifdef CONFIG_Y50_TOUCHSENSOR	
-	//	commit_status("back");
+	
 #else
-	commit_status("t_head");//du zi
+	//commit_status("t_head");//du zi
+	touch_event='a';
 #endif	
 	printk("yydd8----------\n");
+
+	if (!work_pending(&work))
+		{
+			queue_work(wq, &work);
+		}
 
 	return IRQ_HANDLED;
 }
@@ -134,11 +192,18 @@ static irqreturn_t tp_eint9_interrupt_handler(int irq, void *dev_id)
 {
 	
 #ifdef CONFIG_Y50_TOUCHSENSOR
-		commit_status("head");
+		//commit_status("head");
+		touch_event='b';
 #else	
-		commit_status("yyd4");//cntoen
+		//commit_status("yyd4");//cntoen
+		touch_event='c';
 #endif
 	printk("yydd9----------\n");
+
+	if (!work_pending(&work))
+		{
+			queue_work(wq, &work);
+		}
 
 	return IRQ_HANDLED;
 }
@@ -146,16 +211,19 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 {
 
 #ifdef CONFIG_Y50_TOUCHSENSOR	
-		commit_status("left");
+		//commit_status("left");
+		touch_event='d';
 		left_time=jiffies;
 #else	
+	         touch_event='f';
+#if 0
 		commit_status("yyd6");	 //volup
 		
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,1);
 		input_sync(touchsensor_input_dev);
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,0);
 		input_sync(touchsensor_input_dev);
-
+#endif
 		 left_touch=jiffies;
 		dis_time = abs(left_touch - right_touch);
 		if(dis_time < HZ)
@@ -170,6 +238,11 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 			}
 		}
 #endif
+	if (!work_pending(&work))
+		{
+			queue_work(wq, &work);
+		}
+
 	printk("yydd10-----------\n");
 
 	return IRQ_HANDLED;
@@ -177,16 +250,20 @@ static irqreturn_t tp_eint10_interrupt_handler(int irq, void *dev_id)
 static irqreturn_t tp_eint11_interrupt_handler(int irq, void *dev_id)
 {
 #ifdef CONFIG_Y50_TOUCHSENSOR
-			commit_status("right");
+		//	commit_status("right");
 		         right_time=jiffies;
+		touch_event='h';
+
 #else
-		commit_status("yyd5");//voldown
+/*		commit_status("yyd5");//voldown
 	
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEDOWN,1);
 		input_sync(touchsensor_input_dev);
 		input_report_key(touchsensor_input_dev, KEY_VOLUMEDOWN,0);
 		input_sync(touchsensor_input_dev);
-		
+*/		
+		touch_event='i';
+
 		  right_touch=jiffies;
 		   dis_time = abs(left_touch - right_touch);
 		   if(dis_time < HZ)
@@ -201,6 +278,11 @@ static irqreturn_t tp_eint11_interrupt_handler(int irq, void *dev_id)
 			   }
 		   }
 #endif	
+	if (!work_pending(&work))
+		{
+			queue_work(wq, &work);
+		}
+
 	printk("yydd11-----------\n");
 
 	return IRQ_HANDLED;
@@ -219,12 +301,18 @@ printk("yydd16-----------\n");
 static irqreturn_t tp_eint17_interrupt_handler(int irq, void *dev_id)
 {
 #ifdef CONFIG_Y50_TOUCHSENSOR
-	commit_status("back");
+	//commit_status("back");
+	touch_event='j';
 #else
 	
 #endif
 
 printk("yydd17-------------\n");
+
+	if (!work_pending(&work))
+		{
+			queue_work(wq, &work);
+		}
 
 	return IRQ_HANDLED;
 }
@@ -445,6 +533,12 @@ static int tp_probe(struct platform_device *dev)
 			hrtimer_init(&sos_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 			sos_timer.function = sos_commit;
 	//--------------------------------------------
+
+		wq = create_singlethread_workqueue("kworkqueue_iqs");
+				
+		flush_workqueue(wq);
+	
+		INIT_WORK(&work, touch_mcu_worker);
 
 	printk("tp_probe====\n");
 	return 0;
