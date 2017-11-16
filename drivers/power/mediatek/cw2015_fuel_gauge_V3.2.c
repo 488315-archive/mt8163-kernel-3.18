@@ -71,6 +71,14 @@
 #define CWFG_NAME "cw2015"
 #define SIZE_BATINFO    64
 
+#ifdef CONFIG_YX20C_RONGSHIDA_PROFILE 
+static int profile=1;
+#elif defined(CONFIG_Y50E_PROFILE)
+static int profile=2;
+#else 
+static int profile=3;
+#endif
+
 static unsigned char config_info[SIZE_BATINFO] = {
 
 #ifdef CONFIG_YX20C_RONGSHIDA_PROFILE //YX20C rongshida  y20d+xiaoyong    //6600ma
@@ -721,6 +729,7 @@ static void cw_bat_work(struct work_struct *work)
 	cw_printk("status = %d\n", cw_bat->status);
 	cw_printk("capacity = %d\n", cw_bat->capacity);
 	cw_printk("voltage = %d\n", cw_bat->voltage);
+	printk("55555555profile = %d\n", profile);
 
 	#ifdef CONFIG_PM
 	if(suspend_resume_mark == 1)
