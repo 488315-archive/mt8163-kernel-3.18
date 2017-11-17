@@ -37,7 +37,7 @@
 //static struct i2c_client *client;
 
 static unsigned int GPIO_LCD_PWR_EN;
- unsigned int GPIO_LCD_RST_EN,GPIO_LCD_BACKLIGHT;
+static unsigned int GPIO_LCD_RST_EN,GPIO_LCD_BACKLIGHT;
 
 static void lcm_get_gpio_infor(void)
 {
@@ -51,7 +51,7 @@ static void lcm_get_gpio_infor(void)
 	GPIO_LCD_BACKLIGHT= of_get_named_gpio(node, "lcm_backlight", 0);
 }
 
- void lcm_set_gpio_output(unsigned int GPIO, unsigned int output)
+static void lcm_set_gpio_output(unsigned int GPIO, unsigned int output)
 {
 	printk("lifei+++++LCM+++++++%ud\n",output);
 	gpio_direction_output(GPIO, output);

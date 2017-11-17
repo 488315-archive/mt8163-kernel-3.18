@@ -32,7 +32,7 @@
 #include "lcm_drv.h"
 
 /*static unsigned int GPIO_LCD_PWR_EN;*/
-
+#if 0
 static unsigned int GPIO_LCD_PWR_EN;
 static unsigned int GPIO_LCD_RST_EN;
 
@@ -101,7 +101,7 @@ MODULE_AUTHOR("mediatek");
 MODULE_DESCRIPTION("Display subsystem Driver");
 MODULE_LICENSE("GPL");
 
-
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -730,17 +730,28 @@ static void lcm_get_params(LCM_PARAMS *params)
 		params->dsi.PLL_CLOCK = 400;
 }
 
-static unsigned int lcm_compare_id(void);
+
 
 static void dsp_lcm_init(void)
 {		
   	 push_table(lcm_initialization_setting, sizeof(lcm_initialization_setting) / sizeof(struct LCM_setting_table), 1);
 }
 
+extern void spk_ctl_code63xx(int val) ;
+extern bool system_shutdown_flag;
+extern bool yyd_audio_shutdown_flag;
+extern void lcm_set_gpio_output(unsigned int GPIO, unsigned int output);
+extern unsigned int GPIO_LCD_RST_EN,GPIO_LCD_BACKLIGHT;
 
 static void lcm_suspend(void)
 {
-	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);	
+	lcm_set_gpio_output(GPIO_LCD_RST_EN, 0);
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 0);
+	if(system_shutdown_flag==true)
+	{		
+		spk_ctl_code63xx(0);
+		 yyd_audio_shutdown_flag=true;
+	}
 	MDELAY(20);
  	   push_table(lcm_deep_sleep_mode_in_setting, sizeof(lcm_deep_sleep_mode_in_setting) / sizeof(struct LCM_setting_table), 1);
 }
@@ -749,36 +760,26 @@ static void lcm_suspend(void)
 static void lcm_resume(void)
 {
 	lcm_set_gpio_output(GPIO_LCD_RST_EN, 1);	
+	lcm_set_gpio_output(GPIO_LCD_BACKLIGHT, 1);	
 	MDELAY(20);
 	dsp_lcm_init();
 	MDELAY(10);		
 	push_table(lcm_sleep_out_setting, sizeof(lcm_sleep_out_setting) / sizeof(struct LCM_setting_table), 1);
 }
-static unsigned int lcm_compare_id(void)
+
+static void lcm_init_power(void)
 {
-	unsigned int id = 0;
-	unsigned char buffer[3];
-	unsigned int array[16];
-	
-	SET_RESET_PIN(1);  //NOTE:should reset LCM firstly
-	SET_RESET_PIN(0);
-	MDELAY(6);
-	SET_RESET_PIN(1);
-	MDELAY(50);
 
-	array[0] = 0x00033700;// read id return two byte,version and id
-	dsi_set_cmdq(array, 1, 1);
-	read_reg_v2(0x04, buffer, 3);
-	id = buffer[0]; //we only need ID
-#if defined(BUILD_UBOOT)
-	//printf("\n\n\n\n[soso]%s, id1 = 0x%08x\n", __func__, id);
-#endif
-   //printf("\n\n[soso]%s, id0 = 0x%x  id1 = 0x%x  id2 = 0x%x\n", __func__, buffer[0],buffer[1],buffer[2]);
-
-   // return (id == 0x11)?1:0;
-   return id;
 }
 
+static void lcm_suspend_power(void)
+{
+
+}
+
+static void lcm_resume_power(void)
+{
+}
 
 LCM_DRIVER jd9365_dsi_hd_drv = 
 {
@@ -788,6 +789,9 @@ LCM_DRIVER jd9365_dsi_hd_drv =
 	.init           = dsp_lcm_init,
 	.suspend        = lcm_suspend,
 	.resume         = lcm_resume,
-	.compare_id    = lcm_compare_id,
+//	.compare_id    = lcm_compare_id,
+	.init_power = lcm_init_power,
+	.resume_power = lcm_resume_power,
+	.suspend_power = lcm_suspend_power,
 };
 
