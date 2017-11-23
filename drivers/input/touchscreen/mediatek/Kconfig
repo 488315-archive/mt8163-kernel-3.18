@@ -176,4 +176,8 @@ config TOUCHSCREEN_MTK_FT5206
 config Y20D_1280TP
 	bool "Y20D_1280TP for Mediatek package"
 	default n	
+
+config Y50BPROC_DEV
+	bool "Y50BPROC_DEV for Mediatek package"
+	default n	
 endif
