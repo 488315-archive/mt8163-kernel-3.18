@@ -173,9 +173,12 @@ int cw_read_word(struct i2c_client *client, unsigned char reg, unsigned char buf
 	cw_printk("%2x = %2x %2x\n", reg, buf[0], buf[1]);
 	return ret;
 }
-
+static bool initflag=0;
 int cw2015_read_version(void)
 {
+	u8 reg_val;
+
+/*
 	int i=0,ret;
          u8 reg_val;
 	while(i++ <4)
@@ -183,7 +186,11 @@ int cw2015_read_version(void)
 		ret=cw_read(cw_client, 0, &reg_val);
 		if(ret >0)break;//return reg_val;
 	}
-	//printk("ppppppppp--%d\n",reg_val);
+	printk("ppppppppp--%d\n",reg_val);
+*/
+	if(initflag == 1)reg_val=0x6f;
+	else 	 	        reg_val=0;
+	printk("ppppppppp--%x\n",reg_val);
 	return reg_val;
 }
 int cw2015_read_temp(void)
@@ -836,8 +843,10 @@ static int cw2015_probe(struct i2c_client *client, const struct i2c_device_id *i
     }
     if (ret) {
 		printk("%s : cw2015 init fail!\n", __func__);
+		initflag=0;
         return ret;	
     }
+   else initflag=1;
 
 	#ifdef CW_PROPERTIES
 	cw_bat->cw_bat.name = CW_PROPERTIES;
