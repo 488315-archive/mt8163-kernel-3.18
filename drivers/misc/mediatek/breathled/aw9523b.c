@@ -369,10 +369,13 @@ static void AW9523_init(void)
 
 }
 #define DELAY 50
+ static DEFINE_MUTEX(AW9523_mutex);
 
  static void AW9523_breath_front_loop(int8_t color)
   {
 	  int i=0,reg_base=0x20;
+
+	 mutex_lock(&AW9523_mutex);
 
 	AW9523_init();
 	if(color == 0x01)
@@ -536,7 +539,7 @@ static void AW9523_init(void)
 			mDELAY(100);
 #endif
 	}
-	
+	 mutex_unlock(&AW9523_mutex);
        		  
   }
 
@@ -629,6 +632,7 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 		{
 			breath_flag=1;
 			//tt=simple_strtoul(&pbuf[4],NULL,10);
+			if(close_thread ==0)
 			AW9523_breath_front_loop(4);//breath mode
 			//printk("misc_write	00buf=%d\n",tt);
 
