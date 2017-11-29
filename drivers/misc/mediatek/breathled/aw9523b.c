@@ -368,7 +368,8 @@ static void AW9523_init(void)
 	 AW9106_i2c_write_reg(0x13,0x00);
 
 }
-#define DELAY 50
+//#define DELAY 50
+static int light=32,DELAY=110;
  static DEFINE_MUTEX(AW9523_mutex);
 
  static void AW9523_breath_front_loop(int8_t color)
@@ -376,7 +377,7 @@ static void AW9523_init(void)
 	  int i=0,reg_base=0x20;
 
 	 mutex_lock(&AW9523_mutex);
-
+	 if(color !=3)
 	AW9523_init();
 	if(color == 0x01)
 	{	 
@@ -411,97 +412,97 @@ static void AW9523_init(void)
 	{
 		
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x28,0x0);
+		AW9106_i2c_write_reg(0x28,light);
 		AW9106_i2c_write_reg(0x20,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x24,0x0);
+		 AW9106_i2c_write_reg(0x24,light);
 		AW9106_i2c_write_reg(0x20,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x29,0x0);
+		AW9106_i2c_write_reg(0x29,light);
 		AW9106_i2c_write_reg(0x21,0xff);	
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x23,0x0);
+		 AW9106_i2c_write_reg(0x23,light);
 		 AW9106_i2c_write_reg(0x2b,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x2a,0x0);
+		AW9106_i2c_write_reg(0x2a,light);
 		AW9106_i2c_write_reg(0x22,0xff);
 		IIC_DEV->sda=IICSDA1;
-		AW9106_i2c_write_reg(0x22,0x0);
+		AW9106_i2c_write_reg(0x22,light);
 		AW9106_i2c_write_reg(0x2a,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x2b,0x0);
+		AW9106_i2c_write_reg(0x2b,light);
 		AW9106_i2c_write_reg(0x23,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x21,0x0);
+		 AW9106_i2c_write_reg(0x21,light);
 		AW9106_i2c_write_reg(0x29,0xff);
 		mDELAY(DELAY);
 //////////////////////////
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x20,0x0);
+		AW9106_i2c_write_reg(0x20,light);
 		AW9106_i2c_write_reg(0x24,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x20,0x0);
+		 AW9106_i2c_write_reg(0x20,light);
 		AW9106_i2c_write_reg(0x28,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x21,0x0);
+		AW9106_i2c_write_reg(0x21,light);
 		AW9106_i2c_write_reg(0x25,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x2b,0x0);
+		 AW9106_i2c_write_reg(0x2b,light);
 		AW9106_i2c_write_reg(0x27,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x22,0x0);
+		AW9106_i2c_write_reg(0x22,light);
 		AW9106_i2c_write_reg(0x26,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x2a,0x0);
+		 AW9106_i2c_write_reg(0x2a,light);
 		AW9106_i2c_write_reg(0x26,0xff);
 		mDELAY(DELAY);
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x23,0x0);
+		AW9106_i2c_write_reg(0x23,light);
 		AW9106_i2c_write_reg(0x27,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x29,0x0);
+		 AW9106_i2c_write_reg(0x29,light);
 		AW9106_i2c_write_reg(0x25,0xff);
 		mDELAY(DELAY);
 /////////////////////////////////////////
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x24,0x0);
+		AW9106_i2c_write_reg(0x24,light);
 		AW9106_i2c_write_reg(0x28,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x28,0x0);
+		 AW9106_i2c_write_reg(0x28,light);
 		AW9106_i2c_write_reg(0x24,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x25,0x0);
+		AW9106_i2c_write_reg(0x25,light);
 		AW9106_i2c_write_reg(0x29,0xff);
 		IIC_DEV->sda=IICSDA1;		 
-		AW9106_i2c_write_reg(0x27,0x0);
+		AW9106_i2c_write_reg(0x27,light);
 		AW9106_i2c_write_reg(0x23,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x26,0x0);
+		AW9106_i2c_write_reg(0x26,light);
 		AW9106_i2c_write_reg(0x2a,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x26,0x0);
+		 AW9106_i2c_write_reg(0x26,light);
 		AW9106_i2c_write_reg(0x22,0xff);
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
-		AW9106_i2c_write_reg(0x27,0x0);
+		AW9106_i2c_write_reg(0x27,light);
 		AW9106_i2c_write_reg(0x2b,0xff);
 		IIC_DEV->sda=IICSDA1;
-		 AW9106_i2c_write_reg(0x25,0x0);
+		 AW9106_i2c_write_reg(0x25,light);
 		AW9106_i2c_write_reg(0x21,0xff);
 		mDELAY(DELAY);
 #if 0
@@ -598,7 +599,7 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 {
 	 char pbuf[len];	
 	 static bool breath_flag=0,close_thread=1;	 
-	 
+	 int tt;
 	   if(copy_from_user(pbuf, buf,len))
 	   {
 		   return	 -EFAULT;  
@@ -635,6 +636,24 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 			if(close_thread ==0)
 			AW9523_breath_front_loop(4);//breath mode
 			//printk("misc_write	00buf=%d\n",tt);
+
+		}
+		else if(pbuf[2]=='5')
+		{
+			
+			tt=simple_strtoul(&pbuf[4],NULL,10);
+			
+			DELAY=tt;
+			printk("misc_write	00buf=%d\n",tt);
+
+		}
+		else if(pbuf[2]=='6')
+		{
+			
+			tt=simple_strtoul(&pbuf[4],NULL,10);
+			
+			light=tt;
+			printk("misc_write	00buf=%d\n",tt);
 
 		}
 		
@@ -706,6 +725,8 @@ static int  misc_init(void)
 /*----------------------------------------------------------------------------*/
 static int paoma_thread_func(void *data)
 {
+	AW9523_init();
+
 	for (;;) {
 		AW9523_breath_front_loop(3);
 		
