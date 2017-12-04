@@ -580,6 +580,20 @@ static int light=32,DELAY=110;
  }
   static DEVICE_ATTR(yyd_misc, S_IWUSR | S_IWGRP | S_IRUGO, yyd_misc_show, yyd_misc_store);
 
+ static int paoma_thread_func(void *data)
+ {
+	 AW9523_init();
+ 
+	 for (;;) {
+		 AW9523_breath_front_loop(3);
+		 
+		 printk("aw9523b_probe=222===");
+		 if (kthread_should_stop())
+			 break;
+	 }
+	 return 0;
+ }
+
  static int misc_release (struct inode *node, struct file *file)
  {
 	// gpio_free(IIC_DEV->scl);
@@ -656,6 +670,14 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 			printk("misc_write	00buf=%d\n",tt);
 
 		}
+		else if(pbuf[2]=='7')
+		{
+			if(close_thread ==0)
+			{
+			paoma_thread = kthread_run(paoma_thread_func, NULL, "paoma_thread");
+			close_thread=1;
+			}
+		}
 		
 	}
 	return len;
@@ -723,19 +745,6 @@ static int  misc_init(void)
 		
 }
 /*----------------------------------------------------------------------------*/
-static int paoma_thread_func(void *data)
-{
-	AW9523_init();
-
-	for (;;) {
-		AW9523_breath_front_loop(3);
-		
-		printk("aw9523b_probe=222===");
-		if (kthread_should_stop())
-			break;
-	}
-	return 0;
-}
 
 static int aw9523b_probe(struct platform_device *dev)
 {
