@@ -366,7 +366,7 @@
 };
 
 &fpga {
-	rst_d3_gpio124 = <&pio 124 0>;
+	 /*rst_d3_gpio124 = <&pio 124 0>;*/
 	misc_u5_gpio89 = <&pio 89 0>;
 	misc_l19_gpio5 = <&pio 5 0>;
 	misc_y18_gpio42 = <&pio 42 0>;
@@ -388,8 +388,8 @@
 	spk_f23_gpio46 = <&pio 46 0>;
 	led_v21_gpio26 = <&pio 26 0>;
 	iic_slc_gpio52 = <&pio 52 0>;
-	iic_sda_gpio122 = <&pio 121 0>;
-/*	iic_slc_gpio121 = <&pio 122 0>;*/
+	iic_sda_gpio122 = <&pio 124 0>;
+	iic_slc_gpio121 = <&pio 123 0>;
 	iic_sda_gpio29 = <&pio 29 0>;
 	iic_sda1_gpio13 = <&pio 13 0>;
 };
