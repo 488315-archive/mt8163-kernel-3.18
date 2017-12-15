@@ -35,7 +35,7 @@ static struct cdev *misc_cdev;
 static dev_t misc_dev;
 static struct class *misc_class = NULL;
 static struct device *misc_device = NULL;
- static unsigned int IICSCL,IICSDA;
+ static unsigned int IICSCL,IICSDA,POWER_PIN;
 // static struct hrtimer sstop_timer;
 
 #define SDA_SET_OUT(sda)		gpio_direction_output(sda, 1)
@@ -67,9 +67,10 @@ static I2C_GPIO_T IIC_GPIO;
 	 node = of_find_compatible_node(NULL, NULL, "mediatek,adc_rst");
 	IICSCL  = of_get_named_gpio(node, "iic_slc_gpio121", 0);
 	IICSDA   = of_get_named_gpio(node, "iic_sda_gpio122", 0);
-	 
+	 POWER_PIN= of_get_named_gpio(node, "iic_power_gpio25", 0);
 	 gpio_request(IICSDA, "IICSDA");
 	 gpio_request(IICSCL, "IICSCL");
+	  gpio_request(POWER_PIN, "POWER_PIN");
 	printk("yyyyyyyy====%d,%d\n",IICSCL,IICSDA);
 	 dev->scl=IICSCL;
 	 dev->sda=IICSDA;
@@ -82,6 +83,9 @@ static void delay_nop_1us( int wTime)
 
   static void i2c_init_gpio(I2C_GPIO_T *dev)
   {
+  	 gpio_direction_output(POWER_PIN, 1);
+	  gpio_set_value(POWER_PIN, 1);
+	  
 	  gpio_direction_output(dev->scl, 1);
 	  gpio_set_value(dev->scl, 1);
   
@@ -301,6 +305,7 @@ static  void IIC_NAck(I2C_GPIO_T *dev)
  {
 	 gpio_free(IIC_DEV->scl);
 	 gpio_free(IIC_DEV->sda);
+	  gpio_free(POWER_PIN);
 	 printk("misc_release !\n");
 	 return 0;	
  }

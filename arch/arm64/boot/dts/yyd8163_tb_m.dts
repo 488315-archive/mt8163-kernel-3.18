@@ -388,8 +388,9 @@
 	spk_f23_gpio46 = <&pio 46 0>;
 	led_v21_gpio26 = <&pio 26 0>;
 	iic_slc_gpio52 = <&pio 52 0>;
-	iic_sda_gpio122 = <&pio 124 0>;
-	iic_slc_gpio121 = <&pio 123 0>;
+	iic_sda_gpio122 = <&pio 122 0>;
+	iic_slc_gpio121 = <&pio 121 0>;
+	iic_power_gpio25 = <&pio 25 0>;
 	iic_sda_gpio29 = <&pio 29 0>;
 	iic_sda1_gpio13 = <&pio 13 0>;
 };
