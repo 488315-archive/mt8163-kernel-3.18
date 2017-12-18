@@ -40,6 +40,7 @@ static struct device *misc_device = NULL;
  static unsigned int IICSCL,IICSDA,IICSDA1;
 // static struct hrtimer sstop_timer;
 static struct task_struct * paoma_thread;
+static bool breath_flag=0,close_thread=1;	 
 
 #define SDA_SET_OUT(sda)		gpio_direction_output(sda, 1)
 #define SDA_SET_IN(sda)			gpio_direction_input(sda)
@@ -370,13 +371,13 @@ static void AW9523_init(void)
 }
 //#define DELAY 50
 static int light=32,DELAY=110;
- static DEFINE_MUTEX(AW9523_mutex);
+ //static DEFINE_MUTEX(AW9523_mutex);
 
  static void AW9523_breath_front_loop(int8_t color)
   {
 	  int i=0,reg_base=0x20;
 
-	 mutex_lock(&AW9523_mutex);
+	// mutex_lock(&AW9523_mutex);
 	 if(color !=3)
 	AW9523_init();
 	if(color == 0x01)
@@ -417,6 +418,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x24,light);
 		AW9106_i2c_write_reg(0x20,0xff);
+		 if(close_thread == 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -425,6 +427,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x23,light);
 		 AW9106_i2c_write_reg(0x2b,0xff);
+		  if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -433,6 +436,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		AW9106_i2c_write_reg(0x22,light);
 		AW9106_i2c_write_reg(0x2a,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -441,6 +445,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x21,light);
 		AW9106_i2c_write_reg(0x29,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 //////////////////////////
 		IIC_DEV->sda=IICSDA;
@@ -449,6 +454,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x20,light);
 		AW9106_i2c_write_reg(0x28,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -457,6 +463,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x2b,light);
 		AW9106_i2c_write_reg(0x27,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -465,6 +472,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x2a,light);
 		AW9106_i2c_write_reg(0x26,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x23,light);
@@ -472,6 +480,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x29,light);
 		AW9106_i2c_write_reg(0x25,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 /////////////////////////////////////////
 		IIC_DEV->sda=IICSDA;
@@ -480,6 +489,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x28,light);
 		AW9106_i2c_write_reg(0x24,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -488,6 +498,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;		 
 		AW9106_i2c_write_reg(0x27,light);
 		AW9106_i2c_write_reg(0x23,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -496,6 +507,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x26,light);
 		AW9106_i2c_write_reg(0x22,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 
 		IIC_DEV->sda=IICSDA;
@@ -504,6 +516,7 @@ static int light=32,DELAY=110;
 		IIC_DEV->sda=IICSDA1;
 		 AW9106_i2c_write_reg(0x25,light);
 		AW9106_i2c_write_reg(0x21,0xff);
+		 if(close_thread== 0) return;
 		mDELAY(DELAY);
 #if 0
 ///////////////////////////////////////
@@ -540,7 +553,7 @@ static int light=32,DELAY=110;
 			mDELAY(100);
 #endif
 	}
-	 mutex_unlock(&AW9523_mutex);
+	// mutex_unlock(&AW9523_mutex);
        		  
   }
 
@@ -612,7 +625,7 @@ static int light=32,DELAY=110;
 static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len, loff_t * offset)
 {
 	 char pbuf[len];	
-	 static bool breath_flag=0,close_thread=1;	 
+	 
 	 int tt;
 	   if(copy_from_user(pbuf, buf,len))
 	   {
@@ -624,6 +637,18 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 				
 		if(pbuf[2]=='2')
 		{
+			 if(breath_flag == 1)
+			 {
+			 breath_flag=0;
+			 hrtimer_cancel(&led_time);
+			 }
+			 if(close_thread)
+			{
+			 close_thread=0;
+			  kthread_stop(paoma_thread);
+			 
+			 }
+			 msleep(10);
 			AW9523_breath_front_loop(1);//all open
 
 		}
@@ -636,8 +661,9 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 			 }
 			 if(close_thread)
 			{
+			 close_thread=0;
 			  kthread_stop(paoma_thread);
-			  close_thread=0;
+			 
 			 }
 			 
 			AW9523_breath_front_loop(2);//all close
@@ -647,7 +673,12 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 		{
 			breath_flag=1;
 			//tt=simple_strtoul(&pbuf[4],NULL,10);
-			if(close_thread ==0)
+			 if(close_thread)
+			{
+			 close_thread=0;
+			  kthread_stop(paoma_thread);			 
+			 }
+			 msleep(10);
 			AW9523_breath_front_loop(4);//breath mode
 			//printk("misc_write	00buf=%d\n",tt);
 
@@ -672,10 +703,17 @@ static ssize_t misc_write(struct file *pfile, const char __user *buf, size_t len
 		}
 		else if(pbuf[2]=='7')
 		{
+			 if(breath_flag == 1)
+			 {
+			 breath_flag=0;
+			 hrtimer_cancel(&led_time);
+			 }
+		 
 			if(close_thread ==0)
 			{
-			paoma_thread = kthread_run(paoma_thread_func, NULL, "paoma_thread");
 			close_thread=1;
+			paoma_thread = kthread_run(paoma_thread_func, NULL, "paoma_thread");
+			
 			}
 		}
 		
