@@ -722,7 +722,24 @@ static ssize_t frequency_show(struct device *dev, struct device_attribute *attr,
 	
 		return sprintf(buf, "%s\n", data);
 }
+#ifdef CONFIG_Y20D_PRODUCT
+static void aw9016_set_blue(void)
+{
+	breathleds_i2c_client->addr = 0xb2>>1;
 
+	 AW9106_SoftReset(); 			
+	 AW9106_i2c_write_reg(0x12,0x00);	 
+	 AW9106_i2c_write_reg(0x13,0x00);	 
+	 AW9106_i2c_write_reg(0x04,0x00);	 //OUT0 OUT3
+	 AW9106_i2c_write_reg(0x05,0x09); 
+	 AW9106_i2c_write_reg(0x15,0x12);	  //淡进淡出时间设置	  (256+512)  +	 (256+512)
+	AW9106_i2c_write_reg(0x16,0x18);	  //全亮全暗时间设置				
+	AW9106_i2c_write_reg(0x11,0x02);
+	  AW9106_i2c_write_reg(0x14,0x09); 
+	AW9106_i2c_write_reg(0x11,0x82);		
+
+}
+#endif
 static ssize_t ledcolor_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
 				  
 {	
@@ -1277,6 +1294,10 @@ static int breathleds_i2c_probe(struct i2c_client *client, const struct i2c_devi
 		if (device_create_file(breathleds_dev, &dev_attr_frequency) < 0)
 				printk("Failed to create device file(%s)!\n",
 					  dev_attr_frequency.attr.name);
+
+#ifdef CONFIG_Y20D_PRODUCT
+	aw9016_set_blue();
+#endif
 	return 0;
 EXIT:
 
