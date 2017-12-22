@@ -411,7 +411,14 @@ static int light=32,DELAY=110;
 	}
 	else if(color == 0x03)
 	{
-		
+		  IIC_DEV->sda=IICSDA;	
+		  AW9106_i2c_write_reg(0x12,0x00);	 //LED mode
+		  AW9106_i2c_write_reg(0x13,0x00);
+
+		 IIC_DEV->sda=IICSDA1;	
+		 AW9106_i2c_write_reg(0x12,0x00);	//LED mode
+		 AW9106_i2c_write_reg(0x13,0x00);
+	 
 		IIC_DEV->sda=IICSDA;
 		AW9106_i2c_write_reg(0x28,light);
 		AW9106_i2c_write_reg(0x20,0xff);
@@ -596,11 +603,10 @@ static int light=32,DELAY=110;
  static int paoma_thread_func(void *data)
  {
 	 AW9523_init();
- 
 	 for (;;) {
 		 AW9523_breath_front_loop(3);
 		 
-		 printk("aw9523b_probe=222===");
+		 printk("aw9523b_probe=222===%d\n",close_thread);
 		 if (kthread_should_stop())
 			 break;
 	 }
