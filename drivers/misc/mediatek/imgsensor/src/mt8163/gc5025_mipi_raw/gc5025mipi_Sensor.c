@@ -1210,7 +1210,7 @@ static void sensor_init(void)
                           
 	/*MIPI*/                
 	write_cmos_sensor(0xfe, 0x03);
-	write_cmos_sensor(0x02, 0x03);//01  20170512 modify
+	write_cmos_sensor(0x02, 0x57);//01  20170512 modify03s f7
 	write_cmos_sensor(0x03, 0x8e);
 	write_cmos_sensor(0x06, 0x80);
 	write_cmos_sensor(0x15, 0x00);
