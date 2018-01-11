@@ -76,7 +76,8 @@ static void touch_mcu_worker(struct work_struct *work)
 			{
 			commit_status("yyd4");//cntoen
 		}
-		else if(touch_event=='d')
+		//else if(touch_event=='d')
+		else if(touch_event=='h')
 			{
 			commit_status("left");
 		}
@@ -89,7 +90,8 @@ static void touch_mcu_worker(struct work_struct *work)
 			input_report_key(touchsensor_input_dev, KEY_VOLUMEUP,0);
 			input_sync(touchsensor_input_dev);
 		}
-		else if(touch_event=='h')
+		//else if(touch_event=='h')
+			else if(touch_event=='d')
 			{
 			commit_status("right");
 		}
